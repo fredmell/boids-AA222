@@ -1,0 +1,70 @@
+\documentclass[letterpaper, 11pt]{article}
+
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage[letterpaper,margin=0.75in]{geometry}
+\usepackage{textcomp}
+\usepackage[english]{babel}
+\usepackage{indentfirst}
+\usepackage[pdftex]{graphicx}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\setlength\parindent{0pt}
+\usepackage{bbm}
+\usepackage{physics}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx}
+\usepackage{cite}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+}
+
+\setlength\parindent{24pt}
+
+\title{AA 222 - Project Proposal \\ Optimizing the behavior of boids using genetic algorithms}
+\author{Frederik J. Mellbye - frederme}
+\date{\vspace{1ex}}
+
+\begin{document}
+
+\maketitle
+
+% Clearly describe the problem to be solved, the approach to be taken, and how you will measure success. Please reference any prior work that you plan to build upon. The proposal should be limited to two pages.
+
+\section{Introduction}
+
+Boids, developed by Craig Reynolds in 1986 \cite{reynolds:1987:CG}, is an artificial life program that simulates flocking, herding and schooling behavour typically seen in animals in nature. The behavior of boids is governed by a set of simple rules, based on the proximity and heading of other nearby individuals.
+
+Versions of the boids framework have been used in various applications, e.g. to generate realistic-looking flocks of flying animals. Examples are birds in the 1998 video game \textit{Half-Life}, and bat swarms in the 1992 feature film \textit{Batman Returns}.
+
+An extension to boids is the addition of predators. If a predator boid gets sufficiently close to a prey boid, the prey boid is removed. If many prey boids are clustered together, they are more likely to fend off the attacker. To simulate this, a repulsive force from large flocks of prey is added for predators. When predators are present, a fourth rule is usually added for prey boids, namely that with some force they attempt to move away from nearby predators. This simulates the effect of fear.
+
+Predator boids commonly only have one rule, which is to follow and thus attack the nearest prey boid. Other simple rules may be added, but are less common. The predator parameters are held fixed, i.e. they are not selected based on performance.
+
+Within each simulation,
+a number of prey and predator boids are spawned across a two dimensional plane, and act according to the rules. The rules can be considered forces, which are weighed according to a set of coefficients. These coefficients constitute the chromosome of a particular boid. The set of chromosomes of a particular flock is considered the design variable of the problem.
+
+\section{Problem statement}
+The goal is to minimize the expected number of prey boids that die in a simulation. To approximate this quantity, a large number of simulations will be executed and the average number of deaths per simulation is computed. This quantity is returned and considered a function evaluation $f(x)$, where $x$ denotes the set of chromosomes of the individuals in the population.
+
+\section{Approach}
+The boid simulation will be implemented in C++. This is to ensure that the implementation is as computationally efficient as possible. An interface to this code will be written in Python.
+
+A certain number of prey boids will be initialized with random chromosomes (with entries within reasonable bounds). Some selection criterion will be used to select parents, likely some number of boids that most frequently survived the previous function evaluation. Crossover from the previous generation will be applied, and mutation will also be added. The general outline of the genetic algorithm is repeated selection, crossover and mutation over many generations. The possible options for the genetic algorithm steps outlined in \cite{kochenderfer} will be explored.
+
+\section{Measure of success}
+Successful adaptation $x$ for the prey boids is indicated by decreasing $f(x)$. This should also be visible from watching animations of the simulations. As a hypothesis, it seems reasonable that larger degrees of systematic flocking behaviour will outperform higher entropy states (more random movement).
+
+\bibliography{references.bib}{}
+\bibliographystyle{plain}
+
+
+\end{document}
