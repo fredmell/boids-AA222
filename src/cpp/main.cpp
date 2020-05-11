@@ -1,10 +1,19 @@
 #include <iostream>
 
 #include "vec2.hpp"
+#include "boid.hpp"
+#include "flock.hpp"
+#include "system.hpp"
+
+#include "SFML/Window.hpp"
 
 int main(int argc, char const *argv[]) {
-  Vec2 vec(2, 3.2);
-  Vec2 vec2(2, 1);
-  (vec + vec2).print();
+
+  // Create a system with visualization
+  System system(true);
+
+  // Run system with one boid
+  system.run(10);
+
   return 0;
 }
