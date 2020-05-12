@@ -15,3 +15,5 @@ find_package(SFML 2.5.1 COMPONENTS system window graphics network audio)
 
 add_executable(main main.cpp flock.hpp system.cpp boid.cpp vec2.hpp)
 target_link_libraries(main sfml-graphics sfml-window sfml-system)
+
+add_compile_options(-Wall -Wextra -pedantic -Werror)

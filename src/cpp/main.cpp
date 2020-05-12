@@ -1,8 +1,5 @@
 #include <iostream>
 
-#include "vec2.hpp"
-#include "boid.hpp"
-#include "flock.hpp"
 #include "system.hpp"
 
 #include "SFML/Window.hpp"

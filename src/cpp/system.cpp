@@ -9,8 +9,6 @@
 System::System(bool show){
   _show = show;
   if(show){
-    _boidSize = 3.0;
-
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     this->_window_height = desktop.height;
     this->_window_width = desktop.width;
@@ -27,17 +25,11 @@ void System::run(unsigned int numBoids){
     Vec2 pos(_window_width / 3 + 50*i, _window_height/3);
     Vec2 vel(0.0, 1.0);
     Boid boid(pos, vel);
-    sf::CircleShape shape(8,3);
-
-    shape.setPosition(_window_width, _window_height);
-    shape.setOutlineColor(sf::Color(0,255,0));
-    shape.setFillColor(sf::Color::Green);
-    shape.setOutlineThickness(1);
-    shape.setRadius(_boidSize);
-
     _flock.addBoid(boid);
-    _shapes.push_back(shape);
   }
+  Vec2 pos(_window_width / 3, _window_height / 3);
+  Vec2 vel(1.0, 0.0);
+  _flock.addBoid(Boid(pos, vel, true));
 
   // Game loop
   while(_window.isOpen()){
@@ -46,27 +38,21 @@ void System::run(unsigned int numBoids){
   }
 }
 
-void System::takeInput(){
-  sf::Event event;
-  while(_window.pollEvent(event)){
-    if(event.type == sf::Event::Closed) _window.close();
-  }
-}
-
 void System::update(){
   _flock.step(_window_width, _window_height);
   if(_show){
     _window.clear();
+    _flock.draw(_window);
+    _window.display();
+  }
+}
 
-    for (unsigned i=0; i<_flock.size(); i++){
-      _window.draw(_shapes.at(i));
-
-      Boid b = _flock.getBoid(i);
-      _shapes.at(i).setPosition(b.pos().x, b.pos().y);
-
-      double theta = b.directionAngle();
-      _shapes.at(i).setRotation(theta);
-    }
-  _window.display();
+void System::takeInput(){
+  sf::Event event;
+  while(_window.pollEvent(event)){
+    if( (event.type == sf::Event::Closed) ||
+        (event.type == sf::Event::KeyPressed &&
+         event.key.code == sf::Keyboard::Escape) ){
+      _window.close();};
   }
 }

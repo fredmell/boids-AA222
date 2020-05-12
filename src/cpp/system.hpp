@@ -18,8 +18,6 @@ private:
   int _window_width;
   int _window_height;
   Flock _flock;
-  std::vector<sf::CircleShape> _shapes;
-  double _boidSize;
   bool _show;
 
 };
