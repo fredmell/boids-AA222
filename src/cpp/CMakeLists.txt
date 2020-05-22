@@ -13,7 +13,7 @@ include_directories(SFML_INCLUDE_DIR)
 
 find_package(SFML 2.5.1 COMPONENTS system window graphics)
 
-add_executable(main main.cpp flock.hpp system.cpp prey.cpp predator.cpp vec2.hpp)
+add_executable(main main.cpp flock.cpp system.cpp prey.hpp predator.hpp vec1.hpp)
 target_link_libraries(main sfml-graphics sfml-window sfml-system)
 
 add_compile_options(-Wall -Wextra -pedantic -Werror)
