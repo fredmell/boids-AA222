@@ -23,23 +23,10 @@ Boid::Boid(Vec2 x0, Vec2 v0, bool isPred)
     if(isPred){
       _shape.setFillColor(sf::Color::Red);
     }
-    _isPred = isPred;
   }
 
 // Perform one time step. Return value is whether the boid is alive.
 void Boid::step(std::vector<Boid>& boids, bool& alive){
-  // Apply forces
-  Vec2 dv;
-  if( this->isPredator() ){
-    double factor = 1.2;
-    dv = this->hunt(boids).normalize();
-    _vel = dv;
-    _vel *= factor;
-  }
-
-  if (this->isPrey() ){
-    alive = not this->predClose(boids);
-  }
 
   // Update position using new velocity
   _pos += _vel;
@@ -49,7 +36,7 @@ void Boid::step(std::vector<Boid>& boids, bool& alive){
   _shape.setRotation(this->directionAngle());
 }
 
-Vec2 Boid::hunt(const std::vector<Boid>& boids){
+Vec2 Boid::hunt(const std::vector<Prey>& preyBoids){
   // Simply follow the nearest prey
   Vec2 force;
   unsigned idx = 0;
@@ -67,7 +54,7 @@ Vec2 Boid::hunt(const std::vector<Boid>& boids){
   return force;
 }
 
-bool Boid::predClose(std::vector<Boid>& boids){
+bool Prey::predClose(const std::vector<Predator>& predators){
   double closeDist = 5;
   double dist;
   for(unsigned i=0; i<boids.size(); i++){
@@ -80,26 +67,6 @@ bool Boid::predClose(std::vector<Boid>& boids){
     }
   }
   return false;
-}
-
-void Boid::wrap(int width, int height){
-  double dx = 0.0;
-  double dy = 0.0;
-
-  if(_pos.x < 0.0){
-    dx = static_cast<double>(width);
-  }
-  else if(_pos.x > width){
-    dx = - static_cast<double>(width);
-  }
-  if(_pos.y < 0.0){
-    dy = static_cast<double>(height);
-  }
-  else if(_pos.y > height){
-    dy = - static_cast<double>(height);
-  }
-
-  _pos += Vec2(dx, dy);
 }
 
 double Boid::directionAngle(){

@@ -8,8 +8,8 @@
 
 class System{
 public:
-  System(bool show = true);
-  void run(unsigned);
+  System();
+  void run(unsigned int numIter);
   void takeInput();
   void update();
 
@@ -18,7 +18,6 @@ private:
   int _window_width;
   int _window_height;
   Flock _flock;
-  bool _show;
 
 };
 

@@ -11,9 +11,9 @@ set(SFML_LIBRARY_DIR "./SFML/build/lib")
 #link_directories(SFML_LIBRARY_DIR)
 include_directories(SFML_INCLUDE_DIR)
 
-find_package(SFML 2.5.1 COMPONENTS system window graphics network audio)
+find_package(SFML 2.5.1 COMPONENTS system window graphics)
 
-add_executable(main main.cpp flock.hpp system.cpp boid.cpp vec2.hpp)
+add_executable(main main.cpp flock.hpp system.cpp prey.cpp predator.cpp vec2.hpp)
 target_link_libraries(main sfml-graphics sfml-window sfml-system)
 
 add_compile_options(-Wall -Wextra -pedantic -Werror)
