@@ -3,19 +3,19 @@
 
 void Flock::step(int width, int height) {
   // Loop through all Boids, compute forces for each
-  for (Prey &prey : preys) {
-    prey.computeForce(prey, predators);
+  for (auto prey : preys) {
+    prey->computeForce(prey, predators);
   }
-  for (Predator &predator : predators) {
-    predator.computeForce(preys);
+  for (auto predator : predators) {
+    predator->computeForce(preys);
   }
 
   // Loop through all, update using accelleration and eliminate killed prey
-  for (Prey &prey : preys) {
-    prey.step();
+  for (auto prey : preys) {
+    prey->step();
   }
-  for (Predator &predator : preys) {
-    predator.step();
+  for (auto predator : preys) {
+    predator->step();
   }
 }
 
