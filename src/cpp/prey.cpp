@@ -1,7 +1,8 @@
 #include "prey.hpp"
-#include "vec2.hpp"
+#include "boid.hpp"
 
-Prey::Prey(Vec2 x0, Vec2 v0)
-: Boid(x0, v0) {
+#include "SFML/Graphics.hpp"
+
+Prey::Prey(Vec2 x0, Vec2 v0) : Boid(x0, v0) {
     shape.setFillColor(sf::Color::Green);
 }

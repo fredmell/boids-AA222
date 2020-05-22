@@ -23,7 +23,7 @@ void System::run(unsigned int numIter){
     for(unsigned int t=0; t<numIter; t++){
         this->takeInput();
         this->update();
-        if(not this->_window.isOpen()) break;
+        if(not window.isOpen()) break;
     }
 }
 
@@ -35,7 +35,6 @@ void System::update(){
     window.clear();
     flock.draw(window);
     window.display();
-    }
 }
 
 void System::takeInput(){
@@ -45,6 +44,6 @@ void System::takeInput(){
             (event.type == sf::Event::KeyPressed &&
              event.key.code == sf::Keyboard::Escape) ){
                 window.close();
-        };
+        }
     }
 }

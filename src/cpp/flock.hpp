@@ -11,17 +11,10 @@
 
 class Flock{
 public:
-  std::size_t size() const{
-    return preys.size() + predators.size();
-  }
+  std::size_t size();
 
-  void addPrey(Prey* prey){
-    preys.push_back(prey);
-  };
-
-  void addPredator(Predator* predator){
-    predators.push_back(predator);
-  }
+  void addPrey(Prey* prey);
+  void addPredator(Predator* predator);
 
   /**
    * Computes the forces to be applied to each boid, and applies these. Dead
@@ -37,9 +30,8 @@ public:
    */
    void draw(sf::RenderWindow& window);
 
-private:
-  std::vector<Prey*> preys;
-  std::vector<Predator*> predators;
+   std::vector<Prey*> preys;
+   std::vector<Predator*> predators;
 };
 
 #endif // FLOCK_HPP
