@@ -1,5 +1,6 @@
 #include "predator.hpp"
 #include "boid.hpp"
+#include "prey.hpp"
 
 #include "SFML/Graphics.hpp"
 

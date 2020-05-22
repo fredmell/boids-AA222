@@ -20,7 +20,7 @@ Boid::Boid(Vec2 x0, Vec2 v0)
         shape.setRadius(3.0);
   }
 
-double Boid::directionAngle(){
+inline double Boid::directionAngle() const{
     return static_cast<double>(std::atan2(vel.x, -vel.y) * 180.0 / M_PI);
 }
 

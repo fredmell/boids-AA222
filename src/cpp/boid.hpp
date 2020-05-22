@@ -14,7 +14,7 @@ public:
 
   void step();
 
-  double directionAngle();
+  inline double directionAngle() const;
   Vec2 pos;
   Vec2 vel;
   Vec2 acc;

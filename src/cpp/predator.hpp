@@ -2,8 +2,9 @@
 #define PREDATOR_HPP
 
 #include "boid.hpp"
-#include "prey.hpp"
 #include "vec2.hpp"
+
+class Prey;
 
 class Predator: public Boid {
 public:
