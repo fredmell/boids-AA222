@@ -8,15 +8,14 @@
 
 class System{
 public:
-  System(Flock&);
-  void run(unsigned int numIter);
+  System();
+  void run(unsigned int numIter, Flock& flock);
   void takeInput();
-  void update();
+  void update(Flock& flock);
 
   sf::RenderWindow window;
   int window_width;
   int window_height;
-  Flock flock;
 
 };
 

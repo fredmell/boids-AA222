@@ -7,27 +7,28 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 
-System::System(Flock& f)
-    : flock(f) {
-        sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-        window_height = desktop.height;
-        window_width = desktop.width;
-        sf::VideoMode vidMode = sf::VideoMode(window_width,
-                                              window_height,
-                                              desktop.bitsPerPixel);
+System::System()
+{
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    window_height = desktop.height;
+    window_width = desktop.width;
+    sf::VideoMode vidMode = sf::VideoMode(window_width,
+                                          window_height,
+                                          desktop.bitsPerPixel);
 
-        window.create(vidMode, "Boids", sf::Style::None);
+    window.create(vidMode, "Boids", sf::Style::None);
 }
 
-void System::run(unsigned int numIter){
+void System::run(unsigned int numIter, Flock& flock){
     for(unsigned int t=0; t<numIter; t++){
-        this->takeInput();
-        this->update();
+        takeInput();
+        update(flock);
         if(not window.isOpen()) break;
     }
+    window.close();
 }
 
-void System::update(){
+void System::update(Flock& flock){
     // Update positions/velocities
     flock.step(window_width, window_height);
 

@@ -21,10 +21,10 @@ int main(int argc, char const *argv[]) {
     }
 
     // Create a system using this flock
-    System system(flock);
+    System system;
 
     // Run the system for 10000 iterations
-    system.run(10000);
+    system.run(10000, flock);
 
     return 0;
 }
