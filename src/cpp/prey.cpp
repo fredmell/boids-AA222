@@ -1,5 +1,5 @@
 #include "prey.hpp"
-#include "boid.hpp"
+// #include "boid.hpp"
 
 #include "SFML/Graphics.hpp"
 

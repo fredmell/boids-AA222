@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "flock.hpp"
 #include "vec2.hpp"
 
 #include "SFML/Window.hpp"
@@ -12,7 +11,6 @@
 class Boid{
 public:
   Boid(Vec2 x0, Vec2 v0);
-  virtual ~Boid(){};
 
   void step();
 
@@ -22,9 +20,8 @@ public:
   Vec2 acc;
 
   // SFML visualization
-  sf::CircleShape shape = sf::CircleShape(8,3);
+  sf::CircleShape shape;
   void draw(sf::RenderWindow& window){window.draw(shape);};
-  double markerSize = 3.0;
 };
 
 #endif // BOID_HPP

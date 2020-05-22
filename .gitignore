@@ -1,0 +1,13 @@
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.gz
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+main

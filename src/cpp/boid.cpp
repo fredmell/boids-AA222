@@ -12,11 +12,12 @@
 Boid::Boid(Vec2 x0, Vec2 v0)
     : pos(x0), vel(v0) {
         acc = Vec2();
+        shape = sf::CircleShape(8,3);
         shape.setPosition(pos.x, pos.y);
         shape.setOutlineColor(sf::Color(255,255,255));
         shape.setFillColor(sf::Color::Blue);
         shape.setOutlineThickness(0.5);
-        shape.setRadius(markerSize);
+        shape.setRadius(3.0);
   }
 
 double Boid::directionAngle(){
