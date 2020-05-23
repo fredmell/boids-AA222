@@ -8,15 +8,16 @@
 
 class System{
 public:
-  System();
-  void run(unsigned int numIter, Flock& flock);
-  void takeInput();
-  void update(Flock& flock);
+    System(bool render);
+    void run(unsigned int numIter, Flock &flock);
+    void takeInput();
+    void update(Flock &flock);
+    void draw(Flock&);
 
-  sf::RenderWindow window;
-  int window_width;
-  int window_height;
-
+    sf::RenderWindow window;
+    int window_width;
+    int window_height;
+    bool do_render = true;
 };
 
 #endif // SYSTEM_HPP

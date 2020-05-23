@@ -13,6 +13,7 @@ struct Options{
     int number_of_preys = 10;
     int number_of_predators = 3;
     bool abort = false;
+    bool render = true;
 };
 
 void parseOptions(Options&, int argc, char const **argv);
@@ -40,10 +41,12 @@ int main(int argc, char const *argv[]) {
     }
 
     // Create a system using this flock
-    System system;
+    System system(options.render);
 
     // Run the system for 10000 iterations
+    std::cout << "Running simulation..." << std::endl;
     system.run(10000, flock);
+    std::cout << "Completed simulation." << std::endl;
 
     return 0;
 }
@@ -78,8 +81,12 @@ void parseOptions(Options& options, int argc, char const **argv){
     InputParser input(argc, argv);
     if(input.cmdOptionExists("-h") || input.cmdOptionExists("--help")){
         std::cout << "Simulate flocking through natural selection\n\n"
-                  << "--preys     <number of prey boids>\n"
-                  << "--predators <number of predator boids>\n";
+                  << "OPTIONS\n"
+                  << " --preys <num>      Number of prey boids\n"
+                  << " --predators <num>  Number of predator boids\n"
+                  << " -n, --norender     Do not render the simulation.\n"
+                  << " -h, --help         Show this message"
+                  << std::endl;
         options.abort = true;
     }
     const std::string& numPreys = input.getCmdOption("--preys");
@@ -89,5 +96,8 @@ void parseOptions(Options& options, int argc, char const **argv){
     const std::string &numPredators = input.getCmdOption("--predators");
     if (!numPreys.empty()) {
       options.number_of_predators = std::stoi(numPredators);
+    }
+    if (input.cmdOptionExists("-n") || input.cmdOptionExists("--norender")) {
+      options.render = false;
     }
 }
