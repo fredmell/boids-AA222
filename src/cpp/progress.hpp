@@ -27,7 +27,7 @@ public:
       else
         std::cout << " ";
     }
-    std::cout << "]" << int(100 * progress) << " %\r" << std::flush;
+    std::cout << "] " << int(100 * progress) << " %\r" << std::flush;
     next += step_size;
     if (next >= stop)
       next = stop;

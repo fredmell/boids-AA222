@@ -13,8 +13,6 @@ public:
     void takeInput();
     void update(Flock &flock);
     void draw(Flock&);
-    void drawVelocities(Flock&);
-    void drawAccelerations(Flock&);
 
     sf::RenderWindow window;
     sf::VertexArray sf_boids;

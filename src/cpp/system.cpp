@@ -62,48 +62,31 @@ void System::draw(Flock& flock){
         boid = flock.boids[i];
         vertex = &sf_boids[3*i];
         boid->makeTriangle(vertex);
+        // Draw velocities
+        if (do_render_vel){
+            vertex = &sf_velocities[2*i];
+            direction = boid->pos + 20*boid->vel;
+            vertex[0].position = sf::Vector2f(boid->pos.x, boid->pos.y);
+            vertex[1].position = sf::Vector2f(direction.x, direction.y);
+        }
+        // Draw acceleration
+        if (do_render_acc){
+            vertex = &sf_accelerations[2*i];
+            direction = boid->pos + 200*boid->acc;
+            vertex[0].position = sf::Vector2f(boid->pos.x, boid->pos.y);
+            vertex[1].position = sf::Vector2f(direction.x, direction.y);
+            vertex[0].color = sf::Color::Red;
+            vertex[1].color = sf::Color::Red;
+        }
     }
     window.draw(sf_boids);
+    if (do_render_vel)
+        window.draw(sf_velocities);
+    if (do_render_acc)
+        window.draw(sf_accelerations);
 
-    if(do_render_vel)
-        drawVelocities(flock);
-    if(do_render_acc)
-        drawAccelerations(flock);
     window.display();
 }
-
-void System::drawVelocities(Flock& flock){
-    Boid* boid;
-    sf::Vertex* line;
-    Vec2 direction;
-    for(size_t i = 0; i < flock.boids.size(); i++){
-        boid = flock.boids[i];
-        // [boid1.start, boid1.stop, boid2.start, boid2.stop, ...]
-        line = &sf_velocities[2*i];
-        direction = boid->pos + 20*boid->vel;
-        line[0].position = sf::Vector2f(boid->pos.x, boid->pos.y);
-        line[1].position = sf::Vector2f(direction.x, direction.y);
-    }
-    window.draw(sf_velocities);
-}
-
-void System::drawAccelerations(Flock& flock){
-    Boid* boid;
-    sf::Vertex* line;
-    Vec2 direction;
-    for(size_t i = 0; i < flock.boids.size(); i++){
-        boid = flock.boids[i];
-        // [boid1.start, boid1.stop, boid2.start, boid2.stop, ...]
-        line = &sf_accelerations[2*i];
-        direction = boid->pos + 200*boid->acc;
-        line[0].position = sf::Vector2f(boid->pos.x, boid->pos.y);
-        line[1].position = sf::Vector2f(direction.x, direction.y);
-        line[0].color = sf::Color::Red;
-        line[1].color = sf::Color::Red;
-    }
-    window.draw(sf_accelerations);
-}
-
 
 void System::update(Flock& flock){
     // Update positions/velocities
