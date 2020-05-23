@@ -1,5 +1,5 @@
 #include <iostream>
-#include <stdlib.h>
+#include <random>
 
 #include "system.hpp"
 #include "flock.hpp"
@@ -19,29 +19,33 @@ struct Options{
 void parseOptions(Options&, int argc, char const **argv);
 
 int main(int argc, char const *argv[]) {
-    srand(time(NULL));
-
     Options options;
     parseOptions(options, argc, argv);
     if(options.abort)
         return 0;
-    // Create flock
+
+    System system(options.render);
     Flock flock;
 
-    for(size_t i = 0; i < options.number_of_preys; i++){
-        Vec2 pos(rand()%1000, rand()%1000);
-        Vec2 vel(rand()%2, rand()%2);
+    std::random_device rand_dev;
+    std::mt19937 gen(rand_dev());
+    std::uniform_real_distribution<double> dist_height(0.25*system.window_height, 0.75*system.window_height);
+    std::uniform_real_distribution<double> dist_width(0.25*system.window_width, 0.75*system.window_width);
+    std::uniform_real_distribution<double> dist_vel(-1, 1);
+
+    for (size_t i = 0; i < options.number_of_preys; i++) {
+        Vec2 pos(dist_width(gen), dist_height(gen));
+        Vec2 vel(dist_vel(gen),  dist_vel(gen));
         flock.addPrey(new Prey(pos, vel));
     }
 
     for(size_t i = 0; i < options.number_of_predators; i++){
-      Vec2 pos(rand() % 1000, rand() % 1000);
-      Vec2 vel(rand() % 2, rand() % 2);
-      flock.addPredator(new Predator(pos + Vec2(0.0, 100.0), vel));
+        Vec2 pos(dist_width(gen), dist_height(gen));
+        Vec2 vel(dist_vel(gen),  dist_vel(gen));
+        flock.addPredator(new Predator(pos, vel));
     }
 
     // Create a system using this flock
-    System system(options.render);
 
     // Run the system for 10000 iterations
     std::cout << "Running simulation..." << std::endl;
