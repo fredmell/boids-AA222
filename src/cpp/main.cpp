@@ -98,7 +98,7 @@ void parseOptions(Options& options, int argc, char const **argv){
         options.number_of_preys = std::stoi(numPreys);
     }
     const std::string &numPredators = input.getCmdOption("--predators");
-    if (!numPreys.empty()) {
+    if (!numPredators.empty()) {
       options.number_of_predators = std::stoi(numPredators);
     }
     if (input.cmdOptionExists("-n") || input.cmdOptionExists("--norender")) {

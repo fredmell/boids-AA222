@@ -3,9 +3,11 @@
 #include "prey.hpp"
 #include "predator.hpp"
 #include "vec2.hpp"
+#include "progress.hpp"
 
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
+
 
 System::System(bool render)
 {
@@ -22,6 +24,7 @@ System::System(bool render)
 }
 
 void System::run(unsigned int numIter, Flock& flock){
+    Progress progress(numIter);
     for(unsigned int t=0; t<numIter; t++){
         if(do_render)
             takeInput();
@@ -33,6 +36,8 @@ void System::run(unsigned int numIter, Flock& flock){
             if(not window.isOpen())
                 break;
         }
+
+        progress.step();
     }
     if(do_render)
         window.close();

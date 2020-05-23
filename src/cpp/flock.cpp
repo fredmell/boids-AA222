@@ -2,6 +2,13 @@
 #include "prey.hpp"
 #include "predator.hpp"
 
+Flock::~Flock(){
+    for(auto ptr: preys)
+        delete ptr;
+    for(auto ptr: predators)
+        delete ptr;
+}
+
 std::size_t Flock::size(){
     return preys.size() + predators.size();
 }
