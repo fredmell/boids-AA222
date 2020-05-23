@@ -15,10 +15,12 @@ std::size_t Flock::size(){
 
 void Flock::addPrey(Prey* prey){
     preys.push_back(prey);
+    boids.push_back(static_cast<Boid*>(prey));
 }
 
 void Flock::addPredator(Predator* predator){
     predators.push_back(predator);
+    boids.push_back(static_cast<Boid*>(predator));
 }
 
 void Flock::step(int width, int height) {
@@ -40,10 +42,6 @@ void Flock::step(int width, int height) {
 }
 
 void Flock::draw(sf::RenderWindow &window){
-  for (auto prey : preys) {
-    prey->draw(window);
-  }
-  for (auto predator : predators) {
-    predator->draw(window);
-  }
+    for(auto boid : boids)
+        boid->draw(window);
 }

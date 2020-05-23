@@ -49,6 +49,7 @@ public:
         return *this;
     }
 
+    inline Vec2 T() const {return Vec2(y, x);}
     inline double dot(const Vec2& other) const {return (x*other.x + y*other.y);}
 
     inline double length() const {return sqrt(x*x + y*y);}
@@ -78,5 +79,9 @@ public:
     double x;
     double y;
 };
+
+inline Vec2 operator*(double f, const Vec2& vec){
+    return Vec2(f*vec.x, f*vec.y);
+}
 
 #endif // VEC2_HPP

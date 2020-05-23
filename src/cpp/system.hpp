@@ -13,11 +13,17 @@ public:
     void takeInput();
     void update(Flock &flock);
     void draw(Flock&);
+    void drawVelocities(Flock&);
+    void drawAccelerations(Flock&);
 
     sf::RenderWindow window;
+    sf::VertexArray sf_velocities;
+    sf::VertexArray sf_accelerations;
     int window_width;
     int window_height;
     bool do_render = true;
+    bool do_render_vel = false;
+    bool do_render_acc = false;
 };
 
 #endif // SYSTEM_HPP

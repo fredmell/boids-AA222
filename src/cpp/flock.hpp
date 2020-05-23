@@ -33,6 +33,8 @@ public:
 
     std::vector<Prey*> preys;
     std::vector<Predator*> predators;
+    // Contains both preys and predators for easy iteration
+    std::vector<Boid*> boids;
 };
 
 #endif // FLOCK_HPP
