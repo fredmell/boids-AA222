@@ -1,6 +1,10 @@
 #include "flock.hpp"
 #include "prey.hpp"
 #include "predator.hpp"
+#include "boid.hpp"
+
+Flock::Flock(){
+}
 
 Flock::~Flock(){
     for(auto ptr: preys)
@@ -41,7 +45,10 @@ void Flock::step(int width, int height) {
   }
 }
 
-void Flock::draw(sf::RenderWindow &window){
-    for(auto boid : boids)
-        boid->draw(window);
-}
+// void Flock::updateShapes(){
+//     for(auto boid : boids){
+//         // Update position and rotation of SFML shape
+//         boid->shape.setPosition(boid->pos.x, boid->pos.y);
+//         boid->shape.setRotation(boid->directionAngle());
+//     }
+// }

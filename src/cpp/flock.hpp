@@ -11,6 +11,7 @@
 
 class Flock{
 public:
+    Flock();
     virtual ~Flock();
     std::size_t size();
 
@@ -29,7 +30,7 @@ public:
      * Draw all boids at their current positions.
      * @param window The SFML window onto which to draw the boids.
      */
-    void draw(sf::RenderWindow& window);
+    //void updateShapes();
 
     std::vector<Prey*> preys;
     std::vector<Predator*> predators;

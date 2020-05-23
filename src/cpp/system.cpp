@@ -25,8 +25,11 @@ System::System(bool render)
 
 void System::run(unsigned int numIter, Flock& flock){
     Progress progress(numIter);
-    sf_velocities = sf::VertexArray(sf::Lines, 2*flock.boids.size());
-    sf_accelerations = sf::VertexArray(sf::Lines, 2*flock.boids.size());
+    if(do_render){
+        sf_boids = sf::VertexArray(sf::Triangles, 3*flock.boids.size());
+        sf_velocities = sf::VertexArray(sf::Lines, 2*flock.boids.size());
+        sf_accelerations = sf::VertexArray(sf::Lines, 2*flock.boids.size());
+    }
 
     for(unsigned int t=0; t<numIter; t++){
         if(do_render)
@@ -49,7 +52,19 @@ void System::run(unsigned int numIter, Flock& flock){
 void System::draw(Flock& flock){
     // Update window
     window.clear();
-    flock.draw(window);
+    //flock.updateShapes();
+
+    // Want a single iteration through the boids
+    Boid* boid;
+    sf::Vertex* vertex;
+    Vec2 direction;
+    for(size_t i = 0; i < flock.boids.size(); i++){
+        boid = flock.boids[i];
+        vertex = &sf_boids[3*i];
+        boid->makeTriangle(vertex);
+    }
+    window.draw(sf_boids);
+
     if(do_render_vel)
         drawVelocities(flock);
     if(do_render_acc)

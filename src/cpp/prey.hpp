@@ -8,9 +8,9 @@ class Predator;
 
 class Prey: public Boid {
 public:
-  Prey(Vec2 x0, Vec2 v0);
+    Prey(Vec2 x0, Vec2 v0);
 
-  void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
+    void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
 };
 
 #endif // PREY_HPP

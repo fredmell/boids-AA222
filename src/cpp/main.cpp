@@ -86,10 +86,14 @@ void parseOptions(Options& options, int argc, char const **argv){
     if(input.cmdOptionExists("-h") || input.cmdOptionExists("--help")){
         std::cout << "Simulate flocking through natural selection\n\n"
                   << "OPTIONS\n"
-                  << " --preys <num>      Number of prey boids\n"
-                  << " --predators <num>  Number of predator boids\n"
+                  << " --preys <num>      Number of prey boids.\n"
+                  << " --predators <num>  Number of predator boids.\n"
                   << " -n, --norender     Do not render the simulation.\n"
-                  << " -h, --help         Show this message"
+                  << " -h, --help         Show this message.\n\n"
+                  << "KEYMAP\n"
+                  << " esc, q             Quit the simulation.\n"
+                  << " a                  Draw acceleration vectors.\n"
+                  << " v                  Draw velocity vectors.\n"
                   << std::endl;
         options.abort = true;
     }

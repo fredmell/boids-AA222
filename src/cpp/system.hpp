@@ -17,6 +17,7 @@ public:
     void drawAccelerations(Flock&);
 
     sf::RenderWindow window;
+    sf::VertexArray sf_boids;
     sf::VertexArray sf_velocities;
     sf::VertexArray sf_accelerations;
     int window_width;

@@ -11,6 +11,7 @@ public:
   Predator(Vec2 x0, Vec2 v0);
 
   void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
+
 };
 
 #endif // PREDATOR_HPP
