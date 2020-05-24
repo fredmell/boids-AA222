@@ -14,6 +14,8 @@ struct Options{
     int number_of_predators = 3;
     bool abort = false;
     bool render = true;
+    double window_height = -1;
+    double window_width = -1;
 };
 
 void parseOptions(Options&, int argc, char const **argv);
@@ -24,7 +26,7 @@ int main(int argc, char const *argv[]) {
     if(options.abort)
         return 0;
 
-    System system(options.render);
+    System system(options.render, options.window_width, options.window_height);
     Flock flock;
 
     std::random_device rand_dev;
@@ -86,14 +88,16 @@ void parseOptions(Options& options, int argc, char const **argv){
     if(input.cmdOptionExists("-h") || input.cmdOptionExists("--help")){
         std::cout << "Simulate flocking through natural selection\n\n"
                   << "OPTIONS\n"
-                  << " --preys <num>      Number of prey boids.\n"
-                  << " --predators <num>  Number of predator boids.\n"
-                  << " -n, --norender     Do not render the simulation.\n"
-                  << " -h, --help         Show this message.\n\n"
+                  << " --preys <num>        Number of prey boids.\n"
+                  << " --predators <num>    Number of predator boids.\n"
+                  << " -n, --norender       Do not render the simulation.\n"
+                  << " --width <width>      Set the width of the window.\n"
+                  << " --height <height>    Set the height of the window.\n"
+                  << " -h, --help           Show this message.\n\n"
                   << "KEYMAP\n"
-                  << " esc, q             Quit the simulation.\n"
-                  << " a                  Draw acceleration vectors.\n"
-                  << " v                  Draw velocity vectors.\n"
+                  << " esc, q               Quit the simulation.\n"
+                  << " a                    Draw acceleration vectors.\n"
+                  << " v                    Draw velocity vectors.\n"
                   << std::endl;
         options.abort = true;
     }
@@ -107,5 +111,13 @@ void parseOptions(Options& options, int argc, char const **argv){
     }
     if (input.cmdOptionExists("-n") || input.cmdOptionExists("--norender")) {
       options.render = false;
+    }
+    const std::string &width = input.getCmdOption("--width");
+    if (!width.empty()) {
+        options.window_width = std::stod(width);
+    }
+    const std::string &height = input.getCmdOption("--height");
+    if (!height.empty()) {
+        options.window_height = std::stod(height);
     }
 }

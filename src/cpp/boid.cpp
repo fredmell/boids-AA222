@@ -25,7 +25,6 @@ void Boid::step(){
 }
 
 void Boid::makeTriangle(sf::Vertex* triangle){
-    // Implement rotation
     auto angle = directionAngle() + 180;
     triangle[0].position = Vec2(pos.x-5, pos.y-5).rotateAround(angle, pos).toSf();
     triangle[1].position = Vec2(pos.x+5, pos.y-5).rotateAround(angle, pos).toSf();

@@ -8,13 +8,14 @@
 
 class System{
 public:
-    System(bool render);
+    System(bool render, double width, double height);
     void run(unsigned int numIter, Flock &flock);
     void takeInput();
     void update(Flock &flock);
     void draw(Flock&);
 
     sf::RenderWindow window;
+    sf::View view;
     sf::VertexArray sf_boids;
     sf::VertexArray sf_velocities;
     sf::VertexArray sf_accelerations;

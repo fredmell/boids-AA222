@@ -9,17 +9,19 @@
 #include "SFML/Graphics.hpp"
 
 
-System::System(bool render)
+System::System(bool render, double width, double height)
 {
     do_render = render;
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    window_height = desktop.height;
-    window_width = desktop.width;
+    window_height = (height <= 0) ? desktop.height : height;
+    window_width  = (width <= 0)  ? desktop.width  : width;
     sf::VideoMode vidMode =
         sf::VideoMode(window_width, window_height, desktop.bitsPerPixel);
 
     if (render){
       window.create(vidMode, "Boids", sf::Style::None);
+      view = sf::View(sf::FloatRect(0, 0, window_width, window_height));
+      window.setView(view);
     }
 }
 
@@ -113,9 +115,26 @@ void System::takeInput(){
                 do_render_acc = not do_render_acc;
                 break;
             }
+            case sf::Keyboard::Z : {
+                view.zoom(0.5f);
+                window.setView(view);
+                break;
+            }
             default:
                 break;
             }
+        } else if (event.type == sf::Event::Resized) {
+            // update the view to the new size of the window
+            sf::FloatRect visibleArea(0.f, 0.f, event.size.width, event.size.height);
+            window.setView(sf::View(visibleArea));
+        } else if (event.type == sf::Event::MouseWheelScrolled) {
+            int delta = event.mouseWheelScroll.delta;
+            if (delta < 0){
+                view.zoom(0.9f);
+            } else {
+                view.zoom(1.1f);
+            }
+            window.setView(view);
         }
     }
 }
