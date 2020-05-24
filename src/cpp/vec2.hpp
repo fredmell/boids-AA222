@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include "SFML/Graphics.hpp"
 
 class Vec2{
 public:
@@ -74,6 +75,21 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Vec2& vec){
         os << "[" << vec.x << ", " << vec.y << "]";
         return os;
+    }
+
+    inline sf::Vector2f toSf() const{
+        return sf::Vector2f(x, y);
+    }
+
+    inline Vec2 rotate(double angle) const {
+        // Angle in degrees -> radians
+        angle *= M_PI/180.0;
+        return Vec2(x*cos(angle) - y*sin(angle),
+                    x*sin(angle) + y*cos(angle));
+    }
+
+    inline Vec2 rotateAround(double angle, const Vec2& center) const {
+        return (*this - center).rotate(angle) + center;
     }
 
     double x;

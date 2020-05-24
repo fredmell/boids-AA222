@@ -23,7 +23,6 @@ public:
     Vec2 acc;
 
     // SFML visualization
-    //sf::CircleShape shape;
     sf::Color color = sf::Color::Blue;
 
     //void draw(sf::RenderWindow& window){window.draw(shape);};
