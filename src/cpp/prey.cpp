@@ -4,7 +4,7 @@
 
 #include "SFML/Graphics.hpp"
 
-Prey::Prey(Vec2 x0, Vec2 v0, double maxSpeed, double sepCoeff)
+Prey::Prey(Vec2 x0, Vec2 v0, double maxSpeed, double separationCoeff)
 : Boid(x0, v0, maxSpeed), separationCoeff(separationCoeff){
     color = sf::Color::Green;
 }
