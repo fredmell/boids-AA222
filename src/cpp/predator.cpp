@@ -6,11 +6,13 @@
 
 #include "SFML/Graphics.hpp"
 
-Predator::Predator(Vec2 x0, Vec2 v0) : Boid(x0, v0) {
+Predator::Predator(Vec2 x0, Vec2 v0, double maxSpeed, double killRange)
+: Boid(x0, v0, maxSpeed), range(killRange) {
     color = sf::Color::Red;
 }
 
 Vec2 Predator::hunt(std::vector<Prey*>& preys){
+
     // Handle zero prey case
     if(preys.size() == 0) return Vec2();
     // Find nearest prey
@@ -22,6 +24,11 @@ Vec2 Predator::hunt(std::vector<Prey*>& preys){
                                            return d1 < d2;
                                        });
     Prey* closest = *minElement;
+
+    if(pos.distance(closest->pos) < range){
+        closest->alive = false;
+    }
+
     // Return direction towards nearest prey
     Vec2 direction = (closest->pos - pos);
     direction.normalize();

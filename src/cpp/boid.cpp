@@ -9,20 +9,22 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 
-Boid::Boid(Vec2 x0, Vec2 v0)
-    : pos(x0), vel(v0) {
+Boid::Boid(Vec2 x0, Vec2 v0, double maxSpeed)
+    : pos(x0), vel(v0), maxSpeed(maxSpeed) {
         acc = Vec2();
   }
 
 // Perform one time step. Return value is whether the boid is alive.
-void Boid::step(){
+bool Boid::step(){
 
     // Update velocity using acceleration
     vel += acc;
-    vel.normalize();
+    vel.cap(maxSpeed);
 
     // Update position using new velocity
     pos += vel;
+
+    return alive;
 }
 
 void Boid::makeTriangle(sf::Vertex* triangle){

@@ -92,6 +92,17 @@ public:
         return (*this - center).rotate(angle) + center;
     }
 
+    void cap(double maxNorm){
+        double l = length();
+        if(l == 0.0){
+            return;
+        }
+        if(length() >= maxNorm){
+            x = maxNorm*x/l;
+            y = maxNorm*y/l;
+        }
+    }
+
     double x;
     double y;
 };
