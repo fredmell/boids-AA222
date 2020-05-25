@@ -12,6 +12,7 @@ public:
 
   Vec2 hunt(std::vector<Prey*>&);
   Vec2 avoidFlock(std::vector<Prey*>&);
+  Vec2 Separation(std::vector<Predator*>&);
 
   void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
 

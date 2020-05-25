@@ -10,7 +10,7 @@
 #include "SFML/Window.hpp"
 
 struct Options{
-    int number_of_preys = 10;
+    int number_of_preys = 20;
     int number_of_predators = 3;
     bool abort = false;
     bool render = true;
