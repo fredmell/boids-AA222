@@ -56,5 +56,5 @@ void Prey::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& preda
     acc = Vec2();
     acc += sepCoeff * Separation(preys);
     acc += Alignment(preys);
-    acc += Cohesion(preys)
+    acc += Cohesion(preys);
 }
