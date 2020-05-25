@@ -48,13 +48,17 @@ void Flock::step(int width, int height) {
 }
 
 void Flock::remove_dead(){
+    bool causalty = false;
     for (auto& prey : preys){
         if (not prey->alive){
-            delete prey;
-            prey = nullptr;
+          boids.erase(std::remove(boids.begin(), boids.end(), prey),
+                      boids.end());
+          delete prey;
+          prey = nullptr;
+          causalty = true;
         }
     }
+    if(not causalty) return;
 
     preys.erase(std::remove(preys.begin(), preys.end(), nullptr), preys.end());
-    boids.erase(std::remove(boids.begin(), boids.end(), nullptr), boids.end());
 }

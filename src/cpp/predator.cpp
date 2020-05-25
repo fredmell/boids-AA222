@@ -19,8 +19,8 @@ Vec2 Predator::hunt(std::vector<Prey*>& preys){
     auto minElement = std::min_element(preys.begin(),
                                        preys.end(),
                                        [this](Prey* prey1, Prey* prey2){
-                                           auto d1 = this->pos.distance(prey1->pos);
-                                           auto d2 = this->pos.distance(prey2->pos);
+                                           auto d1 = this->pos.distanceSquared(prey1->pos);
+                                           auto d2 = this->pos.distanceSquared(prey2->pos);
                                            return d1 < d2;
                                        });
     Prey* closest = *minElement;

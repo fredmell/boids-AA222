@@ -16,6 +16,7 @@ struct Options{
     bool render = true;
     double window_height = -1;
     double window_width = -1;
+    unsigned int iterations = 10000;
 };
 
 void parseOptions(Options&, int argc, char const **argv);
@@ -51,7 +52,7 @@ int main(int argc, char const *argv[]) {
 
     // Run the system for 10000 iterations
     std::cout << "Running simulation..." << std::endl;
-    system.run(10000, flock);
+    system.run(options.iterations, flock);
     std::cout << "Completed simulation." << std::endl;
 
     return 0;
@@ -119,5 +120,9 @@ void parseOptions(Options& options, int argc, char const **argv){
     const std::string &height = input.getCmdOption("--height");
     if (!height.empty()) {
         options.window_height = std::stod(height);
+    }
+    const std::string &iterations = input.getCmdOption("--iterations");
+    if (!iterations.empty()) {
+      options.iterations = std::stoi(iterations);
     }
 }

@@ -67,6 +67,13 @@ void System::draw(Flock& flock){
     // Update window
     window.clear();
 
+    // Update arrays to take account for dead boids
+    if (3*flock.boids.size() != sf_boids.getVertexCount()){
+        sf_boids.resize(3*flock.boids.size());
+        sf_velocities.resize(2 * flock.boids.size());
+        sf_accelerations.resize(2 * flock.boids.size());
+    }
+
     // Want a single iteration through the boids
     Boid* boid;
     sf::Vertex* vertex;
