@@ -93,9 +93,13 @@ public:
     }
 
     void cap(double maxNorm){
+        double l = length();
+        if(l == 0.0){
+            return;
+        }
         if(length() >= maxNorm){
-            x = maxNorm*x/length();
-            y = maxNorm*y/length();
+            x = maxNorm*x/l;
+            y = maxNorm*y/l;
         }
     }
 
