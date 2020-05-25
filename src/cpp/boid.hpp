@@ -12,7 +12,7 @@ class Boid{
 public:
     Boid(Vec2 x0, Vec2 v0);
 
-    void step();
+    bool step();
 
     inline double directionAngle() const {
             return static_cast<double>(std::atan2(vel.x, -vel.y) * 180.0 / M_PI);
@@ -21,6 +21,8 @@ public:
     Vec2 pos;
     Vec2 vel;
     Vec2 acc;
+
+    bool alive = true;
 
     // SFML visualization
     sf::Color color = sf::Color::Blue;

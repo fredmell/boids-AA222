@@ -15,7 +15,7 @@ Boid::Boid(Vec2 x0, Vec2 v0)
   }
 
 // Perform one time step. Return value is whether the boid is alive.
-void Boid::step(){
+bool Boid::step(){
 
     // Update velocity using acceleration
     vel += acc;
@@ -23,6 +23,8 @@ void Boid::step(){
 
     // Update position using new velocity
     pos += vel;
+
+    return alive;
 }
 
 void Boid::makeTriangle(sf::Vertex* triangle){

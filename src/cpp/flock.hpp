@@ -31,6 +31,7 @@ public:
      * @param window The SFML window onto which to draw the boids.
      */
     //void updateShapes();
+    void remove_dead();
 
     std::vector<Prey*> preys;
     std::vector<Predator*> predators;

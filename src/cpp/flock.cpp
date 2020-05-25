@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "flock.hpp"
 #include "prey.hpp"
 #include "predator.hpp"
@@ -36,7 +38,9 @@ void Flock::step(int width, int height) {
     predator->computeForce(preys, predators);
   }
 
-  // Loop through all, update using acceleration and eliminate killed prey
+  remove_dead();
+
+  // Update velocity using acceleration, update position using velocity
   for (auto prey : preys) {
     prey->step();
   }
@@ -45,10 +49,14 @@ void Flock::step(int width, int height) {
   }
 }
 
-// void Flock::updateShapes(){
-//     for(auto boid : boids){
-//         // Update position and rotation of SFML shape
-//         boid->shape.setPosition(boid->pos.x, boid->pos.y);
-//         boid->shape.setRotation(boid->directionAngle());
-//     }
-// }
+void Flock::remove_dead(){
+    // Remove dead boids by freeing the memory, setting the ptr to nullptr and
+    // removing nullptrs.
+    for (auto& prey : preys){
+        if (not prey->alive){
+            delete prey;
+            prey = nullptr;
+        }
+    }
+    preys.erase(std::remove(preys.begin(), preys.end(), nullptr), preys.end());
+}

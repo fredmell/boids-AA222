@@ -23,6 +23,11 @@ Vec2 Predator::hunt(std::vector<Prey*>& preys){
                                            return d1 < d2;
                                        });
     Prey* closest = *minElement;
+
+    if(pos.distance(closest->pos) < 20){
+        closest->alive = false;
+    }
+
     // Return direction towards nearest prey
     Vec2 direction = (closest->pos - pos);
     direction.normalize();
