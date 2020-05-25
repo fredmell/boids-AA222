@@ -19,6 +19,7 @@ void Boid::step(){
 
     // Update velocity using acceleration
     vel += acc;
+    vel.normalize();
 
     // Update position using new velocity
     pos += vel;

@@ -10,6 +10,9 @@ class Predator: public Boid {
 public:
   Predator(Vec2 x0, Vec2 v0);
 
+  Vec2 hunt(std::vector<Prey*>&);
+  Vec2 avoid(std::vector<Prey*>&);
+
   void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
 
 };
