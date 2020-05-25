@@ -30,7 +30,6 @@ void Flock::addPredator(Predator* predator){
 }
 
 void Flock::step(int width, int height) {
-  // Loop through all Boids, compute forces for each
   for (auto prey : preys) {
     prey->computeForce(preys, predators);
   }
@@ -40,7 +39,6 @@ void Flock::step(int width, int height) {
 
   remove_dead();
 
-  // Update velocity using acceleration, update position using velocity
   for (auto prey : preys) {
     prey->step();
   }
@@ -50,13 +48,13 @@ void Flock::step(int width, int height) {
 }
 
 void Flock::remove_dead(){
-    // Remove dead boids by freeing the memory, setting the ptr to nullptr and
-    // removing nullptrs.
     for (auto& prey : preys){
         if (not prey->alive){
             delete prey;
             prey = nullptr;
         }
     }
+
     preys.erase(std::remove(preys.begin(), preys.end(), nullptr), preys.end());
+    boids.erase(std::remove(boids.begin(), boids.end(), nullptr), boids.end());
 }

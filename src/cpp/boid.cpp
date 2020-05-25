@@ -19,8 +19,7 @@ bool Boid::step(){
 
     // Update velocity using acceleration
     vel += acc;
-    vel.normalize();
-    vel *= maxSpeed;
+    vel.cap(maxSpeed);
 
     // Update position using new velocity
     pos += vel;
