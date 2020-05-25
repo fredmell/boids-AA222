@@ -36,3 +36,17 @@ void Boid::makeTriangle(sf::Vertex* triangle){
     triangle[1].color = color;
     triangle[2].color = color;
 }
+
+void Boid::drawVelocity(sf::Vertex* line){
+    Vec2 direction = pos + 20 * vel;
+    line[0].position = pos.toSf();
+    line[1].position = direction.toSf();
+}
+
+void Boid::drawAcceleration(sf::Vertex *line) {
+  auto direction = pos + 50 * acc;
+  line[0].position = pos.toSf();
+  line[1].position = direction.toSf();
+  line[0].color = sf::Color::Red;
+  line[1].color = sf::Color::Red;
+}

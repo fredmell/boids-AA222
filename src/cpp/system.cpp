@@ -86,18 +86,12 @@ void System::draw(Flock& flock){
         // Draw velocities
         if (do_render_vel){
             vertex = &sf_velocities[2*i];
-            direction = boid->pos + 20*boid->vel;
-            vertex[0].position = boid->pos.toSf();
-            vertex[1].position = direction.toSf();
+            boid->drawVelocity(vertex);
         }
         // Draw acceleration
         if (do_render_acc){
             vertex = &sf_accelerations[2*i];
-            direction = boid->pos + 200*boid->acc;
-            vertex[0].position = boid->pos.toSf();
-            vertex[1].position = direction.toSf();
-            vertex[0].color = sf::Color::Red;
-            vertex[1].color = sf::Color::Red;
+            boid->drawAcceleration(vertex);
         }
     }
     window.draw(sf_boids);

@@ -30,6 +30,8 @@ public:
 
     //void draw(sf::RenderWindow& window){window.draw(shape);};
     void makeTriangle(sf::Vertex*);
+    void drawVelocity(sf::Vertex *line);
+    void drawAcceleration(sf::Vertex *line);
 };
 
 #endif // BOID_HPP
