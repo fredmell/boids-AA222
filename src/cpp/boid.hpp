@@ -10,7 +10,7 @@
 
 class Boid{
 public:
-    Boid(Vec2 x0, Vec2 v0);
+    Boid(Vec2 x0, Vec2 v0, double maxSpeed = 1.0);
 
     bool step();
 
@@ -18,6 +18,7 @@ public:
             return static_cast<double>(std::atan2(vel.x, -vel.y) * 180.0 / M_PI);
     }
 
+    double maxSpeed;
     Vec2 pos;
     Vec2 vel;
     Vec2 acc;

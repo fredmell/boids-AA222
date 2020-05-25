@@ -8,9 +8,7 @@ class Predator;
 
 class Prey: public Boid {
 public:
-    Prey(Vec2 x0, Vec2 v0);
-
-    
+    Prey(Vec2 x0, Vec2 v0, double maxSpeed = 1.0);
 
     void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
 };

@@ -6,7 +6,8 @@
 
 #include "SFML/Graphics.hpp"
 
-Predator::Predator(Vec2 x0, Vec2 v0) : Boid(x0, v0) {
+Predator::Predator(Vec2 x0, Vec2 v0, double maxSpeed)
+: Boid(x0, v0, maxSpeed) {
     color = sf::Color::Red;
 }
 

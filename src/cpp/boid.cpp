@@ -9,8 +9,8 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 
-Boid::Boid(Vec2 x0, Vec2 v0)
-    : pos(x0), vel(v0) {
+Boid::Boid(Vec2 x0, Vec2 v0, double maxSpeed)
+    : pos(x0), vel(v0), maxSpeed(maxSpeed) {
         acc = Vec2();
   }
 
@@ -20,6 +20,7 @@ bool Boid::step(){
     // Update velocity using acceleration
     vel += acc;
     vel.normalize();
+    vel *= maxSpeed;
 
     // Update position using new velocity
     pos += vel;
