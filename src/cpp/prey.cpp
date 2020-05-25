@@ -47,6 +47,7 @@ Vec2 Prey::Cohesion(std::vector<Prey*>& preys){
             count++;
         }
     }
+    if (count == 0) return Vec2();
     sum /= (double)count;
     return sum;
 }
