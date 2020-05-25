@@ -1,3 +1,7 @@
+#include <chrono>
+#include <sstream>
+#include <iomanip>
+
 #include "flock.hpp"
 #include "system.hpp"
 #include "prey.hpp"
@@ -8,6 +12,7 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 
+std::string beautifyDuration(std::chrono::microseconds input_seconds);
 
 System::System(bool render, double width, double height)
 {
@@ -33,6 +38,8 @@ void System::run(unsigned int numIter, Flock& flock){
         sf_accelerations = sf::VertexArray(sf::Lines, 2*flock.boids.size());
     }
 
+    auto start = std::chrono::high_resolution_clock::now();
+
     for(unsigned int t=0; t<numIter; t++){
         if(do_render)
             takeInput();
@@ -47,6 +54,11 @@ void System::run(unsigned int numIter, Flock& flock){
 
         progress.step();
     }
+
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop-start);
+    std::cout << "\nElapsed time: " << beautifyDuration(duration) << std::endl;
+
     if(do_render)
         window.close();
 }
@@ -54,7 +66,6 @@ void System::run(unsigned int numIter, Flock& flock){
 void System::draw(Flock& flock){
     // Update window
     window.clear();
-    //flock.updateShapes();
 
     // Want a single iteration through the boids
     Boid* boid;
@@ -137,4 +148,52 @@ void System::takeInput(){
             window.setView(view);
         }
     }
+}
+
+std::string beautifyDuration(std::chrono::microseconds input_seconds)
+{
+    using namespace std::chrono;
+    typedef duration<int, std::ratio<86400>> days;
+    auto d = duration_cast<days>(input_seconds);
+    input_seconds -= d;
+    auto h = duration_cast<hours>(input_seconds);
+    input_seconds -= h;
+    auto m = duration_cast<minutes>(input_seconds);
+    input_seconds -= m;
+    auto s = duration_cast<seconds>(input_seconds);
+    input_seconds -= s;
+    auto ms = duration_cast<milliseconds>(input_seconds);
+    input_seconds -= ms;
+
+    auto dc = d.count();
+    auto hc = h.count();
+    auto mc = m.count();
+    auto sc = s.count();
+    auto msc = ms.count();
+
+    std::stringstream ss;
+    ss.fill('0');
+    if (dc) {
+        ss << dc << "d ";
+    }
+    if (dc || hc) {
+        if (dc) { ss << std::setw(2); } //pad if second set of numbers
+        ss << hc << "h ";
+    }
+    if (dc || hc || mc) {
+        if (dc || hc) { ss << std::setw(2); }
+        ss << mc << "m ";
+    }
+    if (dc || hc || mc || sc) {
+        if (dc || hc || mc) { ss << std::setw(2); }
+        ss << sc << "s ";
+    }
+    if (dc || hc || mc || sc || msc) {
+      if (dc || hc || mc || sc) {
+        ss << std::setw(2);
+      }
+      ss << msc << "ms ";
+    }
+
+    return ss.str();
 }
