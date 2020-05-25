@@ -35,7 +35,7 @@ Vec2 Predator::hunt(std::vector<Prey*>& preys){
     return direction;
 }
 
-Vec2 Predator::avoid(std::vector<Prey*>& preys){
+Vec2 Predator::avoidFlock(std::vector<Prey*>& preys){
     return Vec2();
 }
 
@@ -43,5 +43,5 @@ void Predator::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& p
     acc = Vec2();
     if(preys.size() == 0) return;
     acc += hunt(preys);
-    acc += avoid(preys);
+    acc += avoidFlock(preys);
 }
