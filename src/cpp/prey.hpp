@@ -8,7 +8,7 @@ class Predator;
 
 class Prey: public Boid {
 public:
-    Prey(Vec2 x0, Vec2 v0, double max_speed = 1.0, double _separation_coeff = 1.0, double _alignment_coeff = 1.0, double _cohesion_coeff = 1.0);
+    Prey(Vec2 x0, Vec2 v0, double max_speed = 1.0, double _separation_coeff = 1.0, double _alignment_coeff = 1.0, double _cohesion_coeff = 0.2);
 
     Vec2 separation(std::vector<Prey*>&);
     Vec2 alignment(std::vector<Prey*>&);
