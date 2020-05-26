@@ -18,14 +18,18 @@ public:
 
     void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
     void setFlock(Flock*) override;
+    void findNearestNeighbors(const std::vector<Prey*>&, double max_distance);
 
     int id_prey = -1;
 
     double sepCoeff;
     double separationCoeff;
-    double alignmentCoeff = 1.0;
-    double cohesionCoeff = 1.0;
+    const double alignmentCoeff = 1.0;
+    const double cohesionCoeff = 1.0;
+    const double view_distance = 200;
     double k = 0.0000001; // Spring constant
+
+    std::vector<Prey*> neighbors;
 };
 
 #endif // PREY_HPP

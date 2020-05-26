@@ -27,7 +27,7 @@ public:
 
     void kill();
     inline bool isAlive() const {return alive;};
-    virtual  void setFlock(Flock*) = 0;
+    virtual void setFlock(Flock*) = 0;
 
     Flock* flock;
     int id_boid = -1;
@@ -36,6 +36,8 @@ public:
     Vec2 pos;
     Vec2 vel;
     Vec2 acc;
+
+    std::vector<Boid*> neighbors;
 
     // SFML visualization
     sf::Color color = sf::Color::Blue;

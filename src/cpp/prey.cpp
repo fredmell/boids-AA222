@@ -11,16 +11,13 @@ Prey::Prey(Vec2 x0, Vec2 v0, double maxSpeed, double separationCoeff)
 }
 
 Vec2 Prey::Separation(std::vector<Prey*>& preys){
-    double sepDistance = 200;
     Vec2 sum = Vec2();
     unsigned int count = 0;
     for(auto prey : preys){
+        Vec2 diff = pos - prey->pos;
         double distance = pos.distanceSquared(prey->pos);
-        if (distance > 0 and distance < sepDistance) {
-            Vec2 diff = pos - prey->pos;
-            sum += diff/(distance); // Weigh close boids more
-            count++;
-        }
+        sum += diff/(distance); // Weigh close boids more
+        count++;
     }
     if (count==0) return Vec2();
     sum /= (double)count;
@@ -28,15 +25,11 @@ Vec2 Prey::Separation(std::vector<Prey*>& preys){
 }
 
 Vec2 Prey::Alignment(std::vector<Prey*>& preys){
-    double viewDistance = 200;
     unsigned int count = 0;
     Vec2 sum = Vec2();
     for (auto prey : preys){
-        double distance = pos.distanceSquared(prey->pos);
-        if (distance > 0 and distance < viewDistance) {
-            sum += prey->vel;
-            count++;
-        }
+        sum += prey->vel;
+        count++;
     }
     if(count == 0) return Vec2();
     sum /= (double)count;
@@ -44,15 +37,11 @@ Vec2 Prey::Alignment(std::vector<Prey*>& preys){
 }
 
 Vec2 Prey::Cohesion(std::vector<Prey*>& preys){
-    double viewDistance = 200;
     unsigned int count = 0;
     Vec2 sum = Vec2();
     for(auto prey : preys){
-        double distance = pos.distanceSquared(prey->pos);
-        if (distance > 0 and distance < viewDistance){
-            sum += prey->pos;
-            count++;
-        }
+        sum += prey->pos;
+        count++;
     }
     if (count == 0) return Vec2();
     sum /= (double)count;
@@ -68,10 +57,11 @@ Vec2 Prey::CenterPull(int width, int height){
 
 
 void Prey::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& predators, int width, int height){
+    findNearestNeighbors(preys, view_distance);
     acc = Vec2();
-    acc += separationCoeff * Separation(preys);
-    acc += alignmentCoeff  * Alignment(preys);
-    acc += cohesionCoeff   * Cohesion(preys);
+    acc += separationCoeff * Separation(neighbors);
+    acc += alignmentCoeff  * Alignment(neighbors);
+    acc += cohesionCoeff   * Cohesion(neighbors);
     acc += CenterPull(width, height);
 }
 
@@ -79,4 +69,15 @@ void Prey::setFlock(Flock* _flock){
     flock = _flock;
     id_boid = flock->boids.size() - 1;
     id_prey = flock->preys.size() - 1;
+}
+
+void Prey::findNearestNeighbors(const std::vector<Prey*>& preys, double max_distance){
+    double distancesq;
+    neighbors.clear();
+    for(auto prey: preys){
+        distancesq = pos.distanceSquared(prey->pos);
+        if(distancesq > 0 and distancesq < max_distance){
+            neighbors.push_back(prey);
+        }
+    }
 }
