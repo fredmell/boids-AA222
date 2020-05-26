@@ -4,13 +4,17 @@
 
 #include "SFML/Graphics.hpp"
 
-Prey::Prey(Vec2 x0, Vec2 v0, double maxSpeed, double separationCoeff)
-: Boid(x0, v0, maxSpeed), separationCoeff(separationCoeff){
+Prey::Prey(Vec2 x0, Vec2 v0,
+           double maxSpeed,
+           double separationCoeff,
+           double alignmentCoeff,
+           double cohesionCoeff)
+: Boid(x0, v0, maxSpeed), separationCoeff(separationCoeff), alignmentCoeff(alignmentCoeff), cohesionCoeff(cohesionCoeff){
     color = sf::Color::Green;
 }
 
 Vec2 Prey::Separation(std::vector<Prey*>& preys){
-    double sepDistance = 200;
+    double sepDistance = 10000;
     Vec2 sum = Vec2();
     unsigned int count = 0;
     for(auto prey : preys){
@@ -27,7 +31,7 @@ Vec2 Prey::Separation(std::vector<Prey*>& preys){
 }
 
 Vec2 Prey::Alignment(std::vector<Prey*>& preys){
-    double viewDistance = 200;
+    double viewDistance = 10000;
     unsigned int count = 0;
     Vec2 sum = Vec2();
     for (auto prey : preys){
@@ -43,7 +47,7 @@ Vec2 Prey::Alignment(std::vector<Prey*>& preys){
 }
 
 Vec2 Prey::Cohesion(std::vector<Prey*>& preys){
-    double viewDistance = 200;
+    double viewDistance = 10000;
     unsigned int count = 0;
     Vec2 sum = Vec2();
     for(auto prey : preys){
