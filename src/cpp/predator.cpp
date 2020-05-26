@@ -62,7 +62,7 @@ void Predator::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& p
     if(preys.size() == 0) return;
     acc += hunt(preys);
     acc += avoidFlock(preys);
-    acc += 2*Separation(predators);
+    acc += separationCoeff * Separation(predators);
 }
 
 void Predator::setFlock(Flock* _flock){
