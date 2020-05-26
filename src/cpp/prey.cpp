@@ -1,6 +1,7 @@
 #include "prey.hpp"
 #include "boid.hpp"
 #include "predator.hpp"
+#include "flock.hpp"
 
 #include "SFML/Graphics.hpp"
 
@@ -58,4 +59,10 @@ void Prey::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& preda
     acc += sepCoeff * Separation(preys);
     acc += Alignment(preys);
     acc += Cohesion(preys);
+}
+
+void Prey::setFlock(Flock* _flock){
+    flock = _flock;
+    id_boid = flock->boids.size() - 1;
+    id_prey = flock->preys.size() - 1;
 }

@@ -31,12 +31,18 @@ public:
      * @param window The SFML window onto which to draw the boids.
      */
     //void updateShapes();
-    void remove_dead();
+    void removeDead();
+    void addCausalty(Boid*);
 
     std::vector<Prey*> preys;
     std::vector<Predator*> predators;
     // Contains both preys and predators for easy iteration
     std::vector<Boid*> boids;
+
+    size_t num_dead = 0;
+    // 512 just in case. Might segfault:P
+    Boid* boid_bodies[512];
+
 };
 
 #endif // FLOCK_HPP

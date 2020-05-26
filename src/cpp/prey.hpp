@@ -15,6 +15,9 @@ public:
     Vec2 Cohesion(std::vector<Prey*>&);
 
     void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
+    void setFlock(Flock*) override;
+
+    int id_prey = -1;
 
     double sepCoeff;
 };
