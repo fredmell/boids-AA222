@@ -8,7 +8,7 @@
 #include "SFML/Graphics.hpp"
 
 Predator::Predator(Vec2 x0, Vec2 v0, double maxSpeed, double killRange)
-: Boid(x0, v0, maxSpeed), range(killRange) {
+: Boid(x0, v0, 3), range(killRange) {
     color = sf::Color::Red;
 }
 

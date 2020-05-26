@@ -6,8 +6,10 @@
 #include "boid.hpp"
 #include "prey.hpp"
 #include "predator.hpp"
+#include "quadtree.hpp"
 
 #include "SFML/Window.hpp"
+
 
 class Flock{
 public:
@@ -42,6 +44,8 @@ public:
     size_t num_dead = 0;
     // 512 just in case. Might segfault:P
     Boid* boid_bodies[512];
+
+    QuadTree<Boid*>* qtree;
 
 };
 

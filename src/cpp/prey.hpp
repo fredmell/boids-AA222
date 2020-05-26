@@ -18,7 +18,7 @@ public:
 
     void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
     void setFlock(Flock*) override;
-    void findNearestNeighbors(const std::vector<Prey*>&, double max_distance);
+    std::vector<Prey*> findNearestNeighbors(const std::vector<Prey*>&, double max_distance);
 
     void drawForces(sf::Vertex*);
 

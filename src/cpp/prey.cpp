@@ -53,7 +53,7 @@ Vec2 Prey::centerPull(int width, int height){
 
 
 void Prey::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& predators, int width, int height){
-    findNearestNeighbors(preys, view_distance);
+    neighbors = findNearestNeighbors(preys, view_distance);
     acc = Vec2();
 
     force_separation  = separation(neighbors);
@@ -72,15 +72,16 @@ void Prey::setFlock(Flock* _flock){
     id_prey = flock->preys.size() - 1;
 }
 
-void Prey::findNearestNeighbors(const std::vector<Prey*>& preys, double max_distance){
+std::vector<Prey*> Prey::findNearestNeighbors(const std::vector<Prey*>& preys, double max_distance){
     double distancesq;
-    neighbors.clear();
+    std::vector<Prey*> neighbors;
     for(auto prey: preys){
         distancesq = pos.distanceSquared(prey->pos);
         if(distancesq > 0 and distancesq < max_distance){
             neighbors.push_back(prey);
         }
     }
+    return std::move(neighbors);
 }
 
 void drawForce(Prey *prey, sf::Vertex *line, sf::Color color, Vec2 &force) {
