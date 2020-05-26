@@ -5,12 +5,13 @@
 
 #include "boid.hpp"
 #include "vec2.hpp"
+#include "flock.hpp"
 
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 
 Boid::Boid(Vec2 x0, Vec2 v0, double maxSpeed)
-    : pos(x0), vel(v0), maxSpeed(maxSpeed) {
+    : pos(x0), vel(v0), maxSpeed(maxSpeed){
         acc = Vec2();
   }
 
@@ -50,3 +51,11 @@ void Boid::drawAcceleration(sf::Vertex *line) {
   line[0].color = sf::Color::Red;
   line[1].color = sf::Color::Red;
 }
+
+void Boid::kill(){
+    if(alive){
+      alive = false;
+      flock->addCausalty(this);
+    }
+}
+

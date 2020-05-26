@@ -3,6 +3,7 @@
 #include "predator.hpp"
 #include "boid.hpp"
 #include "prey.hpp"
+#include "flock.hpp"
 
 #include "SFML/Graphics.hpp"
 
@@ -26,13 +27,13 @@ Vec2 Predator::hunt(std::vector<Prey*>& preys){
     Prey* closest = *minElement;
 
     if(pos.distance(closest->pos) < range){
-        closest->alive = false;
+        closest->kill();
     }
 
     // Return direction towards nearest prey
     Vec2 direction = (closest->pos - pos);
     direction.normalize();
-    return direction;
+    return 2*direction;
 }
 
 Vec2 Predator::avoidFlock(std::vector<Prey*>& preys){
@@ -61,5 +62,11 @@ void Predator::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& p
     if(preys.size() == 0) return;
     acc += hunt(preys);
     acc += avoidFlock(preys);
-    acc += 10*Separation(predators);
+    acc += separationCoeff * Separation(predators);
+}
+
+void Predator::setFlock(Flock* _flock){
+    flock = _flock;
+    id_boid = flock->boids.size() - 1;
+    id_predator = flock->predators.size() - 1;
 }

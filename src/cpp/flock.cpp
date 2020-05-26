@@ -22,11 +22,13 @@ std::size_t Flock::size(){
 void Flock::addPrey(Prey* prey){
     preys.push_back(prey);
     boids.push_back(static_cast<Boid*>(prey));
+    prey->setFlock(this);
 }
 
 void Flock::addPredator(Predator* predator){
     predators.push_back(predator);
     boids.push_back(static_cast<Boid*>(predator));
+    predator->setFlock(this);
 }
 
 void Flock::step(int width, int height) {
@@ -37,28 +39,46 @@ void Flock::step(int width, int height) {
     predator->computeForce(preys, predators);
   }
 
-  remove_dead();
+  removeDead();
 
   for (auto prey : preys) {
-    prey->step();
+      prey->step();
   }
   for (auto predator : predators) {
     predator->step();
   }
 }
 
-void Flock::remove_dead(){
-    bool causalty = false;
-    for (auto& prey : preys){
-        if (not prey->alive){
-          boids.erase(std::remove(boids.begin(), boids.end(), prey),
-                      boids.end());
-          delete prey;
-          prey = nullptr;
-          causalty = true;
-        }
-    }
-    if(not causalty) return;
+void Flock::addCausalty(Boid* boid){
+    boid_bodies[num_dead++] = boid;
+}
 
-    preys.erase(std::remove(preys.begin(), preys.end(), nullptr), preys.end());
+void Flock::removeDead(){
+    if (num_dead <= 0) return;
+
+    // maybe not. Can instead have a counter num_dead and cease iteration when all have been found
+    Prey* boid;
+    int i, j;
+    while(num_dead > 0){
+        // Get the dead boid
+        i = --num_dead;
+        boid = static_cast<Prey*>(boid_bodies[i]);
+
+        // Get the indices of the boids and preys vectors
+        i = boid->id_boid;
+        j = boid->id_prey;
+        delete boid;
+
+        // Override the place with the back
+        boids[i] = std::move(boids.back());
+        preys[j] = std::move(preys.back());
+
+        // delete the now empty back
+        boids.pop_back();
+        preys.pop_back();
+
+        // Update the moved boid's indices
+        boids[i]->id_boid = i;
+        preys[j]->id_prey = j;
+    }
 }

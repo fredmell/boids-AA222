@@ -20,10 +20,19 @@ public:
     Vec2 CenterPull(int width, int height);
     void computeForce(std::vector<Prey*>&, std::vector<Predator*>&, int, int);
 
-    double separationCoeff;
-    double alignmentCoeff;
-    double cohesionCoeff;
-    double k = 0.00001; // Spring constant
+    void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
+    void setFlock(Flock*) override;
+    void findNearestNeighbors(const std::vector<Prey*>&, double max_distance);
+
+    int id_prey = -1;
+
+    const double separationCoeff;
+    const double alignmentCoeff;
+    const double cohesionCoeff;
+    const double view_distance = 200;
+    double k = 0.0000001; // Spring constant
+
+    std::vector<Prey*> neighbors;
 };
 
 #endif // PREY_HPP
