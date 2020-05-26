@@ -6,6 +6,7 @@
 #include "boid.hpp"
 
 Flock::Flock(){
+    qtree = new QuadTree<Boid*>(0, Rectangle(Vec2(0, 0), Vec2(1200, 1200)));
 }
 
 Flock::~Flock(){
@@ -32,21 +33,26 @@ void Flock::addPredator(Predator* predator){
 }
 
 void Flock::step(int width, int height) {
-  for (auto prey : preys) {
-    prey->computeForce(preys, predators, width, height);
-  }
-  for (auto predator : predators) {
-    predator->computeForce(preys, predators);
-  }
+    // qtree->clear();
+    // for(auto boid : boids){
+    //     qtree->insert(boid);
+    // }
 
-  removeDead();
+    for (auto prey : preys) {
+        prey->computeForce(preys, predators, width, height);
+    }
+    for (auto predator : predators) {
+        predator->computeForce(preys, predators);
+    }
 
-  for (auto prey : preys) {
-      prey->step();
-  }
-  for (auto predator : predators) {
-    predator->step();
-  }
+    removeDead();
+
+    for (auto prey : preys) {
+        prey->step();
+    }
+    for (auto predator : predators) {
+        predator->step();
+    }
 }
 
 void Flock::addCausalty(Boid* boid){

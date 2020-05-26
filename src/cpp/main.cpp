@@ -17,6 +17,7 @@ struct Options{
     double window_height = -1;
     double window_width = -1;
     unsigned int iterations = 10000;
+    bool random = false;
 };
 
 void parseOptions(Options&, int argc, char const **argv);
@@ -31,7 +32,12 @@ int main(int argc, char const *argv[]) {
     Flock flock;
 
     std::random_device rand_dev;
-    std::mt19937 gen(rand_dev());
+    std::mt19937 gen;
+    if (options.random){
+        gen = std::mt19937(rand_dev());
+    } else {
+      gen = std::mt19937(1);
+    }
     std::uniform_real_distribution<double> dist_height(0.25*system.window_height, 0.75*system.window_height);
     std::uniform_real_distribution<double> dist_width(0.25*system.window_width, 0.75*system.window_width);
     std::uniform_real_distribution<double> dist_vel(-1, 1);
@@ -94,6 +100,7 @@ void parseOptions(Options& options, int argc, char const **argv){
                 << " -n, --norender       Do not render the simulation.\n"
                 << " --width <width>      Set the width of the window.\n"
                 << " --height <height>    Set the height of the window.\n"
+                << " --random             Use random seed.\n"
                 << " -h, --help           Show this message.\n\n"
                 << "KEYMAP\n"
                 << " esc, q               Quit the simulation.\n"
@@ -113,6 +120,9 @@ void parseOptions(Options& options, int argc, char const **argv){
     }
     if (input.cmdOptionExists("-n") || input.cmdOptionExists("--norender")) {
       options.render = false;
+    }
+    if (input.cmdOptionExists("--random")) {
+        options.random = true;
     }
     const std::string &width = input.getCmdOption("--width");
     if (!width.empty()) {
