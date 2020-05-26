@@ -82,3 +82,19 @@ void Prey::findNearestNeighbors(const std::vector<Prey*>& preys, double max_dist
         }
     }
 }
+
+void drawForce(Prey *prey, sf::Vertex *line, sf::Color color, Vec2 &force) {
+  auto center = prey->pos.toSf();
+  line[0].position = center;
+  line[1].position = center + force.toSf();
+  line[0].color = color;
+  line[1].color = color;
+}
+
+void Prey::drawForces(sf::Vertex* line){
+    drawForce(this, line, sf::Color::Green, force_separation);
+    drawForce(this, line + 2, sf::Color::Blue,  force_cohesion);
+    drawForce(this, line + 4, sf::Color::Yellow, force_alignment);
+    drawForce(this, line + 6, sf::Color::Magenta, force_center_pull);
+}
+

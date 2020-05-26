@@ -19,11 +19,13 @@ public:
     sf::VertexArray sf_boids;
     sf::VertexArray sf_velocities;
     sf::VertexArray sf_accelerations;
+    sf::VertexArray sf_forces;
     int window_width;
     int window_height;
     bool do_render = true;
     bool do_render_vel = false;
     bool do_render_acc = false;
+    bool do_render_forces = false;
 };
 
 #endif // SYSTEM_HPP

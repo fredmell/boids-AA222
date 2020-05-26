@@ -20,6 +20,8 @@ public:
     void setFlock(Flock*) override;
     void findNearestNeighbors(const std::vector<Prey*>&, double max_distance);
 
+    void drawForces(sf::Vertex*);
+
     int id_prey = -1;
 
     double sepCoeff;

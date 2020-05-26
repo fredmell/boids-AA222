@@ -36,6 +36,7 @@ void System::run(unsigned int numIter, Flock& flock){
         sf_boids = sf::VertexArray(sf::Triangles, 3*flock.boids.size());
         sf_velocities = sf::VertexArray(sf::Lines, 2*flock.boids.size());
         sf_accelerations = sf::VertexArray(sf::Lines, 2*flock.boids.size());
+        sf_forces = sf::VertexArray(sf::Lines, 4*2*flock.boids.size());
     }
 
     auto start = std::chrono::high_resolution_clock::now();
@@ -72,6 +73,7 @@ void System::draw(Flock& flock){
         sf_boids.resize(3*flock.boids.size());
         sf_velocities.resize(2 * flock.boids.size());
         sf_accelerations.resize(2 * flock.boids.size());
+        sf_forces.resize(4 * 2 * flock.preys.size());
     }
 
     // Want a single iteration through the boids
@@ -95,6 +97,17 @@ void System::draw(Flock& flock){
         }
     }
     window.draw(sf_boids);
+
+    if(do_render_forces){
+        Prey *prey;
+        for (size_t i = 0; i < flock.preys.size(); i++) {
+            prey = flock.preys[i];
+            vertex = &sf_forces[4 * 2 * i];
+            prey->drawForces(vertex);
+        }
+        window.draw(sf_forces);
+    }
+
     if (do_render_vel)
         window.draw(sf_velocities);
     if (do_render_acc)
@@ -126,6 +139,10 @@ void System::takeInput(){
             case sf::Keyboard::A : {
                 do_render_acc = not do_render_acc;
                 break;
+            }
+            case sf::Keyboard::F: {
+              do_render_forces = not do_render_forces;
+              break;
             }
             case sf::Keyboard::Z : {
                 view.zoom(0.5f);

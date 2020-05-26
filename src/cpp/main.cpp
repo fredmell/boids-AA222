@@ -87,20 +87,21 @@ private:
 void parseOptions(Options& options, int argc, char const **argv){
     InputParser input(argc, argv);
     if(input.cmdOptionExists("-h") || input.cmdOptionExists("--help")){
-        std::cout << "Simulate flocking through natural selection\n\n"
-                  << "OPTIONS\n"
-                  << " --preys <num>        Number of prey boids.\n"
-                  << " --predators <num>    Number of predator boids.\n"
-                  << " -n, --norender       Do not render the simulation.\n"
-                  << " --width <width>      Set the width of the window.\n"
-                  << " --height <height>    Set the height of the window.\n"
-                  << " -h, --help           Show this message.\n\n"
-                  << "KEYMAP\n"
-                  << " esc, q               Quit the simulation.\n"
-                  << " a                    Draw acceleration vectors.\n"
-                  << " v                    Draw velocity vectors.\n"
-                  << std::endl;
-        options.abort = true;
+      std::cout << "Simulate flocking through natural selection\n\n"
+                << "OPTIONS\n"
+                << " --preys <num>        Number of prey boids.\n"
+                << " --predators <num>    Number of predator boids.\n"
+                << " -n, --norender       Do not render the simulation.\n"
+                << " --width <width>      Set the width of the window.\n"
+                << " --height <height>    Set the height of the window.\n"
+                << " -h, --help           Show this message.\n\n"
+                << "KEYMAP\n"
+                << " esc, q               Quit the simulation.\n"
+                << " a                    Draw acceleration vectors.\n"
+                << " v                    Draw velocity vectors.\n"
+                << " f                    Draw prey force vectors.\n"
+                << std::endl;
+      options.abort = true;
     }
     const std::string& numPreys = input.getCmdOption("--preys");
     if (!numPreys.empty()){
