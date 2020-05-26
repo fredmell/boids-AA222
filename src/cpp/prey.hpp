@@ -8,11 +8,13 @@ class Predator;
 
 class Prey: public Boid {
 public:
-    Prey(Vec2 x0, Vec2 v0, double maxSpeed = 1.0, double sepCoeff = 1.0);
+    Prey(Vec2 x0, Vec2 v0, double maxSpeed = 1.0, double separationCoeff = 1.0);
 
     Vec2 Separation(std::vector<Prey*>&);
     Vec2 Alignment(std::vector<Prey*>&);
     Vec2 Cohesion(std::vector<Prey*>&);
+    Vec2 CenterPull(int width, int height);
+    void computeForce(std::vector<Prey*>&, std::vector<Predator*>&, int, int);
 
     void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
     void setFlock(Flock*) override;
@@ -20,6 +22,10 @@ public:
     int id_prey = -1;
 
     double sepCoeff;
+    double separationCoeff;
+    double alignmentCoeff = 1.0;
+    double cohesionCoeff = 1.0;
+    double k = 0.0000001; // Spring constant
 };
 
 #endif // PREY_HPP

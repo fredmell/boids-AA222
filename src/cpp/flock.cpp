@@ -33,7 +33,7 @@ void Flock::addPredator(Predator* predator){
 
 void Flock::step(int width, int height) {
   for (auto prey : preys) {
-    prey->computeForce(preys, predators);
+    prey->computeForce(preys, predators, width, height);
   }
   for (auto predator : predators) {
     predator->computeForce(preys, predators);

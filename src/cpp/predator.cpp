@@ -40,11 +40,29 @@ Vec2 Predator::avoidFlock(std::vector<Prey*>& preys){
     return Vec2();
 }
 
+Vec2 Predator::Separation(std::vector<Predator*>& predators){
+    double sepDistance = 200;
+    Vec2 sum = Vec2();
+    unsigned int count = 0;
+    for(auto predator : predators){
+        double distance = pos.distanceSquared(predator->pos);
+        if (distance > 0 and distance < sepDistance) {
+            Vec2 diff = pos - predator->pos;
+            sum += diff/(distance); // Weigh close boids more
+            count++;
+        }
+    }
+    if (count==0) return Vec2();
+    sum /= (double)count;
+    return sum;
+}
+
 void Predator::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& predators){
     acc = Vec2();
     if(preys.size() == 0) return;
     acc += hunt(preys);
     acc += avoidFlock(preys);
+    acc += 2*Separation(predators);
 }
 
 void Predator::setFlock(Flock* _flock){
