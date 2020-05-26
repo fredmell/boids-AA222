@@ -1,0 +1,234 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Optimal flocking with genetic algorithm]{Optimal flocking of boids using a genetic algorithm} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Frederik J. Mellbye} % Your name
+\institute[SU] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+Stanford University \\ % Your institution for the title page
+\medskip
+\textit{frederme@stanford.edu} % Your email address
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+% \begin{frame}
+% \frametitle{Overview} % Table of contents slide, comment this block out to remove it
+% \tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+% \end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+%------------------------------------------------
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Boids \cite{Reynolds}}
+\begin{itemize}
+\item Artificial Life program
+\item Used to simulate flocking
+\item Simple behavior rules
+\end{itemize}
+\begin{figure}
+  \includegraphics[width=.9\linewidth]{images/flock.jpg}
+  \caption{From \url{http://www.columbia-audubon.org/birds-in-big-numbers-flocks-of-blackbirds-and-starlings/}}
+\end{figure}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Boid rules}
+\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+
+\column{.55\textwidth} % Left column and width
+\begin{block}{Separation}
+Boids steer away from each other when too close, to avoid crashing into each other.
+\end{block}
+\begin{block}{Alignment}
+Steer towards the average heading of local flockmates, aligning their directions.
+\end{block}
+
+\begin{block}{Cohesion}
+Steer towards the average position of local flockmates.
+\end{block}
+
+\column{.4\textwidth} % Right column and width
+\begin{figure}
+  \centering
+  \includegraphics[width=.6\linewidth]{images/separation.png}
+  \includegraphics[width=.6\linewidth]{images/alignment.png}
+  \includegraphics[width=.6\linewidth]{images/cohesion.png}
+\end{figure}
+
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Additions: Predators and boid removal}
+
+\begin{itemize}
+\item Predators: chase nearest prey boid
+\item Prey boids are removed if a predator gets sufficiently close
+\item Predators flee if too many prey boids in close proximity
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+
+%------------------------------------------------
+\begin{frame}
+\frametitle{Computing the force}
+
+\begin{itemize}
+  \item
+  The force on a boid is a weighted sum of the steering forces:
+  \begin{align*}
+    \text{force} = c_1 \times \text{Separation} + c_2 \times \text{Alignment} + c_3 \times \text{Cohesion}
+  \end{align*}
+  \item
+  Chromosome of $i$-th boid:
+  \begin{align*} \mathbf{c^{(i)}} =
+    \begin{bmatrix}
+      c_1 & c_2 & c_3
+    \end{bmatrix}
+  \end{align*}
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{This project}
+
+\begin{itemize}
+  \item Goal: Find design (set of boid coefficients $\mathbf{x} = \{ c^{(i)} \}_{i=1}^{N}$) that minimizes the number of deceased prey boids.
+  \item This will be done using a genetic algorithm. For each generation, real-valued crossover is performed on the survivors to form the next generation. Mutation is added in the form of $\mathcal{N}(0,\sigma^2)$ noise.
+  \item Hypothesis: Over many generations, the algorithm will find good parameters for flocking.
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+
+% \begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
+% \frametitle{Verbatim}
+% \begin{example}[Theorem Slide Code]
+% \begin{verbatim}
+% \begin{frame}
+% \frametitle{Theorem}
+% \begin{theorem}[Mass--energy equivalence]
+% $E = mc^2$
+% \end{theorem}
+% \end{frame}\end{verbatim}
+% \end{example}
+% \end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{References}
+\footnotesize{
+\begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
+\bibitem[Reynolds, 1987]{Reynolds} Reynolds, C. W. (1987)
+\newblock Flocks, Herds, and Schools: A Distributed Behavioral Model, in Computer Graphics
+\newblock 21(4) (\emph{SIGGRAPH '87 Conference Proceedings}) pages 25-34.
+\end{thebibliography}
+}
+\end{frame}
+
+\end{document}
