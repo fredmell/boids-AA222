@@ -8,12 +8,12 @@ class Predator;
 
 class Prey: public Boid {
 public:
-    Prey(Vec2 x0, Vec2 v0, double maxSpeed = 1.0, double separationCoeff = 1.0);
+    Prey(Vec2 x0, Vec2 v0, double max_speed = 1.0, double separation_coeff = 1.0);
 
-    Vec2 Separation(std::vector<Prey*>&);
-    Vec2 Alignment(std::vector<Prey*>&);
-    Vec2 Cohesion(std::vector<Prey*>&);
-    Vec2 CenterPull(int width, int height);
+    Vec2 separation(std::vector<Prey*>&);
+    Vec2 alignment(std::vector<Prey*>&);
+    Vec2 cohesion(std::vector<Prey*>&);
+    Vec2 centerPull(int width, int height);
     void computeForce(std::vector<Prey*>&, std::vector<Predator*>&, int, int);
 
     void computeForce(std::vector<Prey*>&, std::vector<Predator*>&);
@@ -23,11 +23,16 @@ public:
     int id_prey = -1;
 
     double sepCoeff;
-    double separationCoeff;
-    const double alignmentCoeff = 1.0;
-    const double cohesionCoeff = 1.0;
+    double separation_coeff;
+    const double alignment_coeff = 1.0;
+    const double cohesion_coeff = 1.0;
     const double view_distance = 200;
     double k = 0.0000001; // Spring constant
+
+    Vec2 force_separation;
+    Vec2 force_alignment;
+    Vec2 force_cohesion;
+    Vec2 force_center_pull;
 
     std::vector<Prey*> neighbors;
 };
