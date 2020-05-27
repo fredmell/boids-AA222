@@ -60,7 +60,6 @@ void Prey::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& preda
     force_alignment   = alignment(neighbors);
     force_cohesion    = cohesion(neighbors);
     force_center_pull = centerPull(width, height);
-    // neighbors.clear();
     acc += separation_coeff * force_separation;
     acc += alignment_coeff  * force_alignment;
     acc += cohesion_coeff   * force_cohesion;
@@ -98,4 +97,11 @@ void Prey::drawForces(sf::Vertex* line){
     drawForce(this, line + 2, sf::Color::Blue,  force_cohesion);
     drawForce(this, line + 4, sf::Color::Yellow, force_alignment);
     drawForce(this, line + 6, sf::Color::Magenta, force_center_pull);
+}
+
+void Prey::kill(){
+    if(alive){
+      alive = false;
+      flock->addCausalty(this);
+    }
 }

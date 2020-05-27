@@ -6,8 +6,8 @@
 class Progress {
 public:
   Progress(int max) : stop(max), step_size((double)max / width) {
-    draw();
     next = step_size;
+    draw();
   }
   void step() {
     current++;

@@ -68,6 +68,7 @@ public:
     const unsigned int level;
     const Rectangle bounds;
 
+protected:
     std::size_t num_objs = 0;
     T objects[max_objects];
     std::array<QuadTree<T>*, 4> nodes;
@@ -134,9 +135,10 @@ int QuadTree<T>::index(const T& object){
 
 template <typename T>
 void QuadTree<T>::insert(const T& object){
-    int index_ = -2;
+    int index_;
 
-    std::cerr << "FAC: " << index_ << std::endl;
+    std::cerr << "Inserting at level " << level << std::endl;
+    std::cerr << "Nodes[0]" << nodes[0] << std::endl;
     // Attempt to add the object to a child
     if(nodes[0] != nullptr){
         index_ = index(object);
@@ -146,13 +148,16 @@ void QuadTree<T>::insert(const T& object){
         }
     }
 
+    //std::cerr << "to myself" << std::endl;
     // No children, so add the object to me
     objects[num_objs++] = object;
 
     // If I need to split, send all of my elements to my children
     // or copy the remaining to myself
-    if (num_objs > max_objects && level < max_levels){
+    if (num_objs >= max_objects && level < max_levels){
+        //std::cerr << "Nodes[0]" << nodes[0] << std::endl;
         if(nodes[0] == nullptr){
+            std::cerr << "I should split now" << std::endl;
             split();
         }
 
@@ -160,15 +165,18 @@ void QuadTree<T>::insert(const T& object){
         int k = 0;
         // Move to children
         for(int i = 0; i < num_objs; i++){
-            std::cerr << "DUC: " << i << std::endl;
             index_ = index(objects[i]);
-            std::cerr << "FAC: " << index_ << std::endl;
+            //std::cerr << "moving to " << index_ << std::endl;
             if(index_ != -1){
+                //std::cerr << objects[i] << std::endl;
+                //std::cerr << (nodes[0] == nullptr) << std::endl;
+                //std::cerr << (nodes[index_] == nullptr) << std::endl;
                 nodes[index_]->insert(objects[i]);
             } else {
                 tmp[k++] = objects[i];
             }
         }
+        // std::cerr << "Done" << std::endl;
         // Copy remaining back to myself
         for(int i = 0; i < k; i++){
             objects[i] = tmp[i];
