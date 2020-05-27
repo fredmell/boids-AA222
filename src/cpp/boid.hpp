@@ -12,9 +12,9 @@ class Flock;
 
 class Boid{
 public:
-    Boid(Vec2 x0, Vec2 v0, double maxSpeed = 1.0);
+    Boid(Vec2 x0, Vec2 v0, double maxSpeed = 1.0, double _max_force = 0.1);
 
-    bool step();
+    void step();
 
     inline double directionAngle() const {
             return static_cast<double>(std::atan2(vel.x, -vel.y) * 180.0 / M_PI);
@@ -31,7 +31,8 @@ public:
     Flock* flock;
     int id_boid = -1;
 
-    double maxSpeed;
+    const double max_speed;
+    const double max_force;
     Vec2 pos;
     Vec2 vel;
     Vec2 acc;

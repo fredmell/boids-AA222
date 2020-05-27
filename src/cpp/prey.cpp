@@ -5,20 +5,27 @@
 
 #include "SFML/Graphics.hpp"
 
-Prey::Prey(Vec2 x0, Vec2 v0, double max_speed, double _separation_coeff, double _alignment_coeff, double _cohesion_coeff)
-: Boid(x0, v0, max_speed), separation_coeff(_separation_coeff), alignment_coeff(_alignment_coeff), cohesion_coeff(_cohesion_coeff){
+Prey::Prey(Vec2 x0, Vec2 v0, double max_speed, double _separation_coeff, double _alignment_coeff, double _cohesion_coeff, double max_force)
+: Boid(x0, v0, max_speed, max_force), separation_coeff(_separation_coeff), alignment_coeff(_alignment_coeff), cohesion_coeff(_cohesion_coeff){
     color = sf::Color::Green;
 }
 
 Vec2 Prey::separation(std::vector<Prey*>& preys){
     if(preys.size() == 0) return Vec2();
     Vec2 sum = Vec2();
+    int count = 0;
     for(auto prey : preys){
         Vec2 diff = pos - prey->pos;
-        double distance = pos.distanceSquared(prey->pos);
-        sum += diff/(distance); // Weigh close boids more
+        double distance = diff.length();
+        if(distance < 50){
+            sum += diff;
+            count++;
+        }
     }
-    sum /= (double)preys.size();
+    if (count != 0) {
+        sum /= (double)count;
+        sum /= sum.lengthSquared(); // Stronger force if closer
+    }
     return sum;
 }
 
@@ -28,7 +35,7 @@ Vec2 Prey::alignment(std::vector<Prey*>& preys){
     for (auto prey : preys){
         sum += prey->vel;
     }
-    sum /= (double)preys.size();
+    sum /= preys.size();
     return sum;
 }
 
@@ -36,12 +43,12 @@ Vec2 Prey::cohesion(std::vector<Prey*>& preys){
     if (preys.size() == 0)
         return Vec2();
 
-    Vec2 sum = Vec2();
+    Vec2 center_of_mass = Vec2();
     for (auto prey : preys) {
-        sum += prey->pos;
+        center_of_mass += prey->pos;
     }
-    sum /= (double)preys.size();
-    return sum;
+    center_of_mass /= (double)preys.size();
+    return center_of_mass - pos;
 }
 
 Vec2 Prey::centerPull(int width, int height){
@@ -54,16 +61,17 @@ Vec2 Prey::centerPull(int width, int height){
 
 void Prey::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& predators, int width, int height){
     neighbors = findNearestNeighbors(preys, view_distance);
-    acc = Vec2();
+    acc = 0;
 
-    force_separation  = separation(neighbors);
-    force_alignment   = alignment(neighbors);
-    force_cohesion    = cohesion(neighbors);
-    force_center_pull = centerPull(width, height);
+    force_separation = separation(neighbors);
+    force_alignment  = alignment(neighbors);
+    force_cohesion   = cohesion(neighbors);
+    // force_center_pull = centerPull(width, height);
     acc += separation_coeff * force_separation;
-    acc += alignment_coeff  * force_alignment;
-    acc += cohesion_coeff   * force_cohesion;
-    acc += force_center_pull;
+    acc += alignment_coeff * force_alignment;
+    acc += cohesion_coeff  * force_cohesion;
+    acc.cap(max_force);
+    // acc += force_center_pull;
 }
 
 void Prey::setFlock(Flock* _flock){
@@ -77,7 +85,7 @@ std::vector<Prey*> Prey::findNearestNeighbors(const std::vector<Prey*>& preys, d
     std::vector<Prey*> neighbors;
     for(auto prey: preys){
         distancesq = pos.distanceSquared(prey->pos);
-        if(distancesq > 0 and distancesq < max_distance){
+        if(this != prey and distancesq < max_distance){
             neighbors.push_back(prey);
         }
     }

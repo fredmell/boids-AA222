@@ -24,21 +24,28 @@ Vec2 Predator::hunt(std::vector<Prey*>& preys){
                                            auto d2 = this->pos.distanceSquared(prey2->pos);
                                            return d1 < d2;
                                        });
-    Prey* closest = *minElement;
+    target = *minElement;
 
-    if(pos.distance(closest->pos) < range){
-        closest->kill();
+    if(pos.distance(target->pos) < range){
+        target->kill();
     }
 
     // Return direction towards nearest prey
-    Vec2 direction = (closest->pos - pos);
+    Vec2 direction = (target->pos - pos);
     direction.normalize();
     return direction;
 }
 
 Vec2 Predator::avoidFlock(std::vector<Prey*>& preys){
-    
-    return Vec2();
+    Vec2 force;
+    int num_close = 0;
+    for (auto prey : target->neighbors){
+        if( pos.distance(prey->pos) < flee_distance ) num_close++;
+    }
+    if (num_close > flee_number){
+        force -= target->pos;
+    }
+    return force;
 }
 
 Vec2 Predator::Separation(std::vector<Predator*>& predators){
@@ -61,7 +68,7 @@ Vec2 Predator::Separation(std::vector<Predator*>& predators){
 void Predator::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& predators){
     acc = Vec2();
     if(preys.size() == 0) return;
-    acc += 2*hunt(preys);
+    acc += hunt(preys);
     acc += avoidFlock(preys);
     acc += separationCoeff * Separation(predators);
 }

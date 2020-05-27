@@ -8,7 +8,7 @@ class Predator;
 
 class Prey: public Boid {
 public:
-    Prey(Vec2 x0, Vec2 v0, double max_speed = 1.0, double _separation_coeff = 1.0, double _alignment_coeff = 1.0, double _cohesion_coeff = 0.2);
+    Prey(Vec2 x0, Vec2 v0, double max_speed = 1.0, double _separation_coeff = 100.0, double _alignment_coeff = 0.01, double _cohesion_coeff = 0.1, double max_force = 0.01);
 
     Vec2 separation(std::vector<Prey*>&);
     Vec2 alignment(std::vector<Prey*>&);
@@ -28,8 +28,8 @@ public:
     const double separation_coeff;
     const double alignment_coeff;
     const double cohesion_coeff;
-    const double view_distance = 200;
-    double k = 0.0000001; // Spring constant
+    const double view_distance = 20000;
+    const double k = 0.0000001; // Spring constant
 
     Vec2 force_separation;
     Vec2 force_alignment;

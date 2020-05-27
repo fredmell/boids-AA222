@@ -20,6 +20,10 @@ public:
     int id_prey = -1;
     int id_predator = -1;
 
+    Prey* target;
+    const double flee_distance = 100;
+    const int flee_number = 3;
+
     double separationCoeff = 10.0;
     double alignmentCoeff = 1.0;
     double cohesionCoeff = 1.0;

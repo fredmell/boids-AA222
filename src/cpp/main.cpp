@@ -16,7 +16,7 @@ struct Options{
     bool render = true;
     double window_height = -1;
     double window_width = -1;
-    unsigned int iterations = 4000;
+    unsigned int iterations = 6000;
     bool random = false;
 };
 
@@ -45,6 +45,7 @@ int main(int argc, char const *argv[]) {
     for (size_t i = 0; i < options.number_of_preys; i++) {
         Vec2 pos(dist_width(gen), dist_height(gen));
         Vec2 vel(dist_vel(gen),  dist_vel(gen));
+        vel.normalize();
         flock.addPrey(new Prey(pos, vel));
     }
 

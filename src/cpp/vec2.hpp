@@ -10,6 +10,8 @@ public:
     Vec2(double x, double y) : x(x), y(y) {};
     Vec2() : Vec2(0.0, 0.0) {};
 
+    Vec2 operator=(double val){return Vec2(val, val);};
+
     Vec2 operator +(const Vec2& other) const {return Vec2(x + other.x, y + other.y);};
     Vec2& operator += (const Vec2& other){
         x += other.x;
@@ -101,6 +103,13 @@ public:
             x = maxNorm*x/l;
             y = maxNorm*y/l;
         }
+    }
+
+    void setLen(double new_len){
+        double old_len = length();
+        if(old_len == 0) return;
+        x *= new_len/old_len;
+        y *= new_len/old_len;
     }
 
     double x;

@@ -10,22 +10,22 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 
-Boid::Boid(Vec2 x0, Vec2 v0, double maxSpeed)
-    : pos(x0), vel(v0), maxSpeed(maxSpeed){
+Boid::Boid(Vec2 x0, Vec2 v0, double _max_speed, double _max_force)
+    : pos(x0), vel(v0), max_speed(_max_speed), max_force(_max_force){
         acc = Vec2();
   }
 
 // Perform one time step. Return value is whether the boid is alive.
-bool Boid::step(){
+void Boid::step(){
+    // Cap force to maximum allowed acceleration
+    acc.cap(max_force);
 
-    // Update velocity using acceleration
+    // Update and cap velocity to max velocity
     vel += acc;
-    vel.cap(maxSpeed);
+    vel.cap(max_speed);
 
     // Update position using new velocity
     pos += vel;
-
-    return alive;
 }
 
 void Boid::makeTriangle(sf::Vertex* triangle){
@@ -51,4 +51,3 @@ void Boid::drawAcceleration(sf::Vertex *line) {
   line[0].color = sf::Color::Red;
   line[1].color = sf::Color::Red;
 }
-
