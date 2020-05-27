@@ -39,19 +39,18 @@ int main(int argc, char const *argv[]) {
       gen = std::mt19937(1);
     }
     std::uniform_real_distribution<double> dist_height(0.25*system.window_height, 0.75*system.window_height);
-    std::uniform_real_distribution<double> dist_width(0.25*system.window_width, 0.75*system.window_width);
-    std::uniform_real_distribution<double> dist_vel(-1, 1);
+    std::uniform_real_distribution<double> dist_width(0.0, 0.5*system.window_width);
+    std::uniform_real_distribution<double> dist_vel(0.8, 1);
 
     for (size_t i = 0; i < options.number_of_preys; i++) {
         Vec2 pos(dist_width(gen), dist_height(gen));
-        Vec2 vel(dist_vel(gen),  dist_vel(gen));
-        vel.normalize();
+        Vec2 vel(rand()%3 - 1,  rand()%3 - 1);
         flock.addPrey(new Prey(pos, vel));
     }
 
     for(size_t i = 0; i < options.number_of_predators; i++){
         Vec2 pos(dist_width(gen), dist_height(gen));
-        Vec2 vel(dist_vel(gen),  dist_vel(gen));
+        Vec2 vel(rand()%3 - 1,  rand()%3 - 1);
         flock.addPredator(new Predator(pos, vel));
     }
 

@@ -20,9 +20,9 @@ void Boid::step(){
     // Cap force to maximum allowed acceleration
     acc.cap(max_force);
 
-    // Update and cap velocity to max velocity
+    // Update and set velocity to max velocity
     vel += acc;
-    vel.cap(max_speed);
+    vel.setLen(max_speed);
 
     // Update position using new velocity
     pos += vel;

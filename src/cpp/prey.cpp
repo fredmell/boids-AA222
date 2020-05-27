@@ -17,14 +17,18 @@ Vec2 Prey::separation(std::vector<Prey*>& preys){
     for(auto prey : preys){
         Vec2 diff = pos - prey->pos;
         double distance = diff.length();
-        if(distance < 50){
+        if(distance < 20){
+            diff.normalize();
+            diff /= distance;
             sum += diff;
             count++;
         }
     }
     if (count != 0) {
         sum /= (double)count;
-        sum /= sum.lengthSquared(); // Stronger force if closer
+        sum.setLen(max_speed);
+        sum -= vel;
+        sum.cap(max_force);
     }
     return sum;
 }
@@ -36,26 +40,43 @@ Vec2 Prey::alignment(std::vector<Prey*>& preys){
         sum += prey->vel;
     }
     sum /= preys.size();
+    sum.normalize();
+    sum *= max_speed;
+    sum -= vel;
+    sum.cap(max_force);
     return sum;
 }
 
 Vec2 Prey::cohesion(std::vector<Prey*>& preys){
-    if (preys.size() == 0)
-        return Vec2();
+    if (preys.size() == 0) return Vec2();
 
     Vec2 center_of_mass = Vec2();
     for (auto prey : preys) {
         center_of_mass += prey->pos;
     }
     center_of_mass /= (double)preys.size();
-    return center_of_mass - pos;
+    Vec2 sum = center_of_mass - pos;
+    sum.setLen(max_speed);
+    sum -= vel;
+    sum.cap(max_force);
+    return sum;
 }
 
 Vec2 Prey::centerPull(int width, int height){
-    Vec2 center = Vec2((double)width/2, (double)height/2);
-    Vec2 diff = pos - center;
-    if (diff.lengthSquared() < width) return Vec2();
-    return -k*diff;
+    double dx, dy;
+    if(pos.x > 0.9*width){
+        dx = -1.0;
+    }
+    else if (pos.x < 0.1*width){
+        dx = 1.0;
+    }
+    if(pos.y > 0.9*height){
+        dy = -1.0;
+    }
+    if(pos.y < 0.1*height){
+        dy = 1.0;
+    }
+    return Vec2(dx, dy);
 }
 
 
@@ -66,12 +87,12 @@ void Prey::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& preda
     force_separation = separation(neighbors);
     force_alignment  = alignment(neighbors);
     force_cohesion   = cohesion(neighbors);
-    // force_center_pull = centerPull(width, height);
+    force_center_pull = centerPull(width, height);
     acc += separation_coeff * force_separation;
     acc += alignment_coeff * force_alignment;
     acc += cohesion_coeff  * force_cohesion;
     acc.cap(max_force);
-    // acc += force_center_pull;
+    acc += force_center_pull;
 }
 
 void Prey::setFlock(Flock* _flock){
