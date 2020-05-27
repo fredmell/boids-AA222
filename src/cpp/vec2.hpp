@@ -13,6 +13,8 @@ public:
     Vec2 operator=(double val){return Vec2(val, val);};
 
     Vec2 operator +(const Vec2& other) const {return Vec2(x + other.x, y + other.y);};
+    Vec2 operator +(double val) const {return Vec2(x + val, y + val);};
+    Vec2 operator -(double val) const {return Vec2(x - val, y - val);};
     Vec2& operator += (const Vec2& other){
         x += other.x;
         y += other.y;
@@ -70,7 +72,7 @@ public:
         return *this;
     };
 
-    void print(){
+    void print() const{
         std::cout << "[" << x << ", " << y << "]" << std::endl;
     }
 

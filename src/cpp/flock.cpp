@@ -5,8 +5,10 @@
 #include "predator.hpp"
 #include "boid.hpp"
 
-Flock::Flock(){
-    // qtree = new QuadTree<Boid*>(0, Rectangle(Vec2(0, 0), Vec2(1200, 1200)));
+Flock::Flock(double width, double height){
+    Vec2 center(width/2, height/2);
+    double size = 10*width;
+    qtree = new QuadTree<Boid*>(0, Rectangle(center, size));
 }
 
 Flock::~Flock(){
@@ -33,10 +35,10 @@ void Flock::addPredator(Predator* predator){
 }
 
 void Flock::step(int width, int height, unsigned t) {
-    // qtree->clear();
-    // for(auto boid : boids){
-    //      qtree->insert(boid);
-    // }
+    //qtree->clear();
+    //for(auto boid : boids){
+    //     qtree->insert(boid);
+    //}
 
     for (auto prey : preys) {
         prey->computeForce(preys, predators, width, height);
