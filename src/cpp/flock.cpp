@@ -32,7 +32,7 @@ void Flock::addPredator(Predator* predator){
     predator->setFlock(this);
 }
 
-void Flock::step(int width, int height) {
+void Flock::step(int width, int height, unsigned t) {
     // qtree->clear();
     // for(auto boid : boids){
     //     qtree->insert(boid);

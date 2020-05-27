@@ -44,7 +44,7 @@ void System::run(unsigned int numIter, Flock& flock){
     for(unsigned int t=0; t<numIter; t++){
         if(do_render)
             takeInput();
-        update(flock);
+        update(flock, t);
 
         // Handle the window
         if(do_render){
@@ -116,9 +116,9 @@ void System::draw(Flock& flock){
     window.display();
 }
 
-void System::update(Flock& flock){
+void System::update(Flock& flock, unsigned t){
     // Update positions/velocities
-    flock.step(window_width, window_height);
+    flock.step(window_width, window_height, t);
 }
 
 void System::takeInput(){

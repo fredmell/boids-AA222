@@ -26,7 +26,7 @@ public:
      * @param width Screen width
      * @param height Screen height
      */
-    void step(int width, int height);
+    void step(int width, int height, unsigned t);
 
     /**
      * Draw all boids at their current positions.

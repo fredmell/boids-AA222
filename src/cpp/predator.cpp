@@ -7,8 +7,8 @@
 
 #include "SFML/Graphics.hpp"
 
-Predator::Predator(Vec2 x0, Vec2 v0, double maxSpeed, double killRange)
-: Boid(x0, v0, 3), range(killRange) {
+Predator::Predator(Vec2 x0, Vec2 v0, double max_speed, double kill_range)
+: Boid(x0, v0, max_speed), range(kill_range) {
     color = sf::Color::Red;
 }
 
@@ -37,6 +37,7 @@ Vec2 Predator::hunt(std::vector<Prey*>& preys){
 }
 
 Vec2 Predator::avoidFlock(std::vector<Prey*>& preys){
+    
     return Vec2();
 }
 

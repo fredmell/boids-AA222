@@ -10,13 +10,13 @@
 #include "SFML/Window.hpp"
 
 struct Options{
-    int number_of_preys = 20;
+    int number_of_preys = 100;
     int number_of_predators = 3;
     bool abort = false;
     bool render = true;
     double window_height = -1;
     double window_width = -1;
-    unsigned int iterations = 10000;
+    unsigned int iterations = 4000;
     bool random = false;
 };
 

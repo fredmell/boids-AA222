@@ -11,7 +11,7 @@ public:
     System(bool render, double width, double height);
     void run(unsigned int numIter, Flock &flock);
     void takeInput();
-    void update(Flock &flock);
+    void update(Flock &flock, unsigned t);
     void draw(Flock&);
 
     sf::RenderWindow window;
