@@ -107,6 +107,13 @@ void System::draw(Flock& flock){
         }
         window.draw(sf_forces);
     }
+    if (do_render_qtree){
+        //std::cout << "SIZE: " << flock.qtree->getDepth() << std::endl;
+        //std::cout << "SZIE: " << 8*(flock.qtree->getDepth()) << std::endl;
+        sf::VertexArray sf_qtree(sf::Lines, 8*(flock.qtree->getDepth()));
+        flock.qtree->draw(sf_qtree);
+        window.draw(sf_qtree);
+    }
 
     if (do_render_vel)
         window.draw(sf_velocities);
@@ -143,6 +150,10 @@ void System::takeInput(){
             case sf::Keyboard::F: {
               do_render_forces = not do_render_forces;
               break;
+            }
+            case sf::Keyboard::T: {
+                do_render_qtree = not do_render_qtree;
+                break;
             }
             case sf::Keyboard::Z : {
                 view.zoom(0.5f);

@@ -5,9 +5,11 @@
 
 class Progress {
 public:
-  Progress(int max) : stop(max), step_size((double)max / width) {
-    next = step_size;
-    draw();
+    Progress(int max) : stop(max),
+                        width(70){
+        step_size = max/((double)width);
+        next = step_size;
+        draw();
   }
   void step() {
     current++;
@@ -37,9 +39,9 @@ public:
 
   int current = 0;
   int next = 0;
-  const double step_size;
+  double step_size;
   const int stop;
-  const int width = 70;
+  const int width;
 };
 
 #endif /* PROGRESS_H */

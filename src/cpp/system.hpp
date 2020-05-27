@@ -26,6 +26,7 @@ public:
     bool do_render_vel = false;
     bool do_render_acc = false;
     bool do_render_forces = false;
+    bool do_render_qtree = false;
 };
 
 #endif // SYSTEM_HPP

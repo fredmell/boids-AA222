@@ -13,7 +13,7 @@
 
 class Flock{
 public:
-    Flock();
+    Flock(double, double);
     virtual ~Flock();
     std::size_t size();
 

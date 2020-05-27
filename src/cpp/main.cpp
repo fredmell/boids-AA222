@@ -29,7 +29,7 @@ int main(int argc, char const *argv[]) {
         return 0;
 
     System system(options.render, options.window_width, options.window_height);
-    Flock flock;
+    Flock flock(system.window_width, system.window_height);
 
     std::random_device rand_dev;
     std::mt19937 gen;
@@ -107,6 +107,7 @@ void parseOptions(Options& options, int argc, char const **argv){
                 << " a                    Draw acceleration vectors.\n"
                 << " v                    Draw velocity vectors.\n"
                 << " f                    Draw prey force vectors.\n"
+                << " t                    Draw quad tree.\n"
                 << std::endl;
       options.abort = true;
     }
