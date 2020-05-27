@@ -52,10 +52,3 @@ void Boid::drawAcceleration(sf::Vertex *line) {
   line[1].color = sf::Color::Red;
 }
 
-void Boid::kill(){
-    if(alive){
-      alive = false;
-      flock->addCausalty(this);
-    }
-}
-

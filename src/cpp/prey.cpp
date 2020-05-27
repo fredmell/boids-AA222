@@ -99,3 +99,10 @@ void Prey::drawForces(sf::Vertex* line){
     drawForce(this, line + 6, sf::Color::Magenta, force_center_pull);
 }
 
+void Prey::kill(){
+    if(alive){
+      alive = false;
+      flock->addCausalty(this);
+    }
+}
+

@@ -25,7 +25,6 @@ public:
     void drawVelocity(sf::Vertex *line);
     void drawAcceleration(sf::Vertex *line);
 
-    void kill();
     inline bool isAlive() const {return alive;};
     virtual void setFlock(Flock*) = 0;
 

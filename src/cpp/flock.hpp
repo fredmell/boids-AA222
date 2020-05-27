@@ -34,7 +34,7 @@ public:
      */
     //void updateShapes();
     void removeDead();
-    void addCausalty(Boid*);
+    void addCausalty(Prey*);
 
     std::vector<Prey*> preys;
     std::vector<Predator*> predators;
@@ -43,7 +43,7 @@ public:
 
     size_t num_dead = 0;
     // 512 just in case. Might segfault:P
-    Boid* boid_bodies[512];
+    Prey* boid_bodies[512];
 
     QuadTree<Boid*>* qtree;
 

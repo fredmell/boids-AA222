@@ -6,7 +6,7 @@
 #include "boid.hpp"
 
 Flock::Flock(){
-    qtree = new QuadTree<Boid*>(0, Rectangle(Vec2(0, 0), Vec2(1200, 1200)));
+    // qtree = new QuadTree<Boid*>(0, Rectangle(Vec2(0, 0), Vec2(1200, 1200)));
 }
 
 Flock::~Flock(){
@@ -35,7 +35,7 @@ void Flock::addPredator(Predator* predator){
 void Flock::step(int width, int height) {
     // qtree->clear();
     // for(auto boid : boids){
-    //     qtree->insert(boid);
+    //      qtree->insert(boid);
     // }
 
     for (auto prey : preys) {
@@ -55,7 +55,7 @@ void Flock::step(int width, int height) {
     }
 }
 
-void Flock::addCausalty(Boid* boid){
+void Flock::addCausalty(Prey* boid){
     boid_bodies[num_dead++] = boid;
 }
 
@@ -68,12 +68,11 @@ void Flock::removeDead(){
     while(num_dead > 0){
         // Get the dead boid
         i = --num_dead;
-        boid = static_cast<Prey*>(boid_bodies[i]);
+        boid = boid_bodies[i];
 
         // Get the indices of the boids and preys vectors
         i = boid->id_boid;
         j = boid->id_prey;
-        delete boid;
 
         // Override the place with the back
         boids[i] = std::move(boids.back());
@@ -86,5 +85,7 @@ void Flock::removeDead(){
         // Update the moved boid's indices
         boids[i]->id_boid = i;
         preys[j]->id_prey = j;
+
+        delete boid;
     }
 }
