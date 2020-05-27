@@ -92,7 +92,7 @@ void Prey::computeForce(std::vector<Prey*>& preys, std::vector<Predator*>& preda
     acc += alignment_coeff * force_alignment;
     acc += cohesion_coeff  * force_cohesion;
     acc.cap(max_force);
-    acc += force_center_pull;
+    acc += 3*force_center_pull;
 }
 
 void Prey::setFlock(Flock* _flock){

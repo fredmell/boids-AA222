@@ -24,7 +24,7 @@ public:
     const double flee_distance = 80;
     const int flee_number = 3;
 
-    double separationCoeff = 10.0;
+    double separationCoeff = 100.0;
     double alignmentCoeff = 1.0;
     double cohesionCoeff = 1.0;
     double k = 0.0000001; // Spring constant
