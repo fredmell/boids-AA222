@@ -7,6 +7,8 @@
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{booktabs} % for professional tables
+\usepackage{mathtools}
+\usepackage{physics}
 
 % hyperref makes hyperlinks in the resulting PDF.
 % If your build breaks (sometimes temporarily if a hyperlink spans a page)
@@ -25,7 +27,7 @@
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{Something}
+\icmltitlerunning{Optimal flocking with a genetic algorithm}
 
 \begin{document}
 
@@ -75,46 +77,104 @@
 % \printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
 
 \begin{abstract}
-This document provides a basic paper template and submission guidelines.
-Abstracts must be a single paragraph, ideally between 4--6 sentences long.
-Gross violations will trigger corrections at the camera-ready phase.
+A genetic evolution-based approach is used to determine the coefficients of a boids model for optimal flocking. The model is inspired by the original Reynolds model, and adds predators. The results show that ...
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
-\cite{reynolds:1987:CG}
+What are boids?
+
+Applications of boids framework:
+- Helped understand animal flocking (e.g. how do birds determine where to fly when)
+- CGI (movies, games)
+- Collective motion of drone/vehicle swarms. Very feasible, because each agent measures and reacts to surroundings on its own, without the need of a central controller that controls all boids. In simulations, this allows parallelization.
 
 \section{Background}
 \label{sec:background}
+Reynolds \cite{reynolds:1987:CG}.
+
+Optimization of boids \cite{ntnu}.
 
 \section{Approach}
 \label{sec:approach}
 \subsection{Boids system}
-Prey:
-\begin{figure}
+\begin{figure*}
   \centering
-  \includegraphics[width=.4\linewidth]{images/separation.png}
-  \caption{Separation.}
-  \label{fig:separation}
-\end{figure}
+  \includegraphics[width=.25\linewidth]{images/separation.png}
+  \includegraphics[width=.25\linewidth]{images/alignment.png}
+  \includegraphics[width=.25\linewidth]{images/cohesion.png}
+  \caption{Steering forces on prey boids. From the left: Separation, alignment and cohesion \cite{reynolds:1987:CG}.}
+  \label{fig:preyforces}
+\end{figure*}
 
-\begin{figure}
+Prey boids have the three original steering forces; cohesion, separation and alignment \cite{reynolds:1987:CG}. These are depicted in Figure~\ref{fig:preyforces}.
+
+The cohesion force $F_c$ on boid $b_j$ is given by
+\begin{align}
+  F_c = c_c \frac{1}{n-1} \sum_{i \neq j}^{n} x_i - x_j
+\end{align}
+where $c_c$ is a corresponding coefficient on the force, and $x_i$ is the position of $b_i$. It draws boids closer to the general position of neighboring boids.
+
+Similarly, the separation force is given by
+\begin{align}
+  F_s = c_s \frac{1}{n-1} \sum_{i \neq j}^{n} \frac{x_i - x_j}{\norm{x_i - x_j}_2}
+\end{align}
+This force only considers boids that are very close, and ensures boids do not fly too close to each other. In some sense this simulates that the boids have some size and avoid crashing.
+
+Finally, the alignment force is
+\begin{align}
+  F_a = c_a \frac{1}{n-1} \sum_{i \neq j}^{n} v_i - v_j
+\end{align}
+where $v_i$ is the velocity vector of $b_i$. Boids steer towards the average heading of neighboring boids.
+
+The forces are combined to produce a total force, which is clipped, simulating how animals only can turn at certain rates. The total force is therefore given by
+\begin{align*}
+  F = \max(F_c + F_s + F_a, F_\text{max})
+\end{align*}
+The boid masses are normalized, so the force is the acceleration. We also have a time step $\Delta t = 1$. Therefore, the velocity and position updates are
+\begin{align*}
+  v^{(k+1)} &= v^{(k)} + F \\
+  x^{(k+1)} &= x^{(k)} + \frac{v^{(k+1)}}{\norm{v^{(k+1)}}_2}
+\end{align*}
+Note that the velocity is normalized. This paper assumes that all boids fly at their max speed $v_\text{max}$ at all times.
+
+\begin{figure*}
   \centering
-  \includegraphics[width=.4\linewidth]{images/alignment.png}
-  \caption{Alignment.}
-  \label{fig:align}
-\end{figure}
+  \includegraphics[width=.25\linewidth]{images/chase.png}
+  \includegraphics[width=.25\linewidth]{images/avoid.png}
+  \caption{Hunt and flee steering forces on predator boids. Modified versions of images from \cite{reynolds:1987:CG}.}
+  \label{fig:predatorforces}
+\end{figure*}
 
-\begin{figure}
+\subsection{Genetic algorithm}
+Genetic algorithm approaches commonly have three components; selection, crossover and mutation \cite{kochenderfer}. The fashion in which these are performed commonly differs based on the particular application and the way the chromosomes are encoded.
+
+
+
+\begin{table*}
   \centering
-  \includegraphics[width=.4\linewidth]{images/cohesion.png}
-  \caption{Cohesion.}
-  \label{fig:cohesion}
-\end{figure}
+  \caption{Parameters used for the genetic algorithm and boids simulation}
+  \label{tbl:params}
+\begin{tabular}{*3l} \toprule
+\emph{Name}       & \emph{Symbol} & \emph{Value} \\ \midrule
+           &        &       \\
+Separation range           &        &       \\
+Prey force ranges         &        &       \\
+Kill range          &        &       \\
+Hunting coefficient & $c_h$ &       \\
+Flee coefficient &  $c_f$ &       \\
+Predator $v_\text{max}$ &       & 1.1      \\
+Prey $v_\text{max}$ &        & 1.0      \\
+           &        & \\\bottomrule
+\end{tabular}
+\end{table*}
 
-Predators:
+\subsection{Computational considerations}
+For performance reasons, the implementation of the boids framework and genetric algorithm was done in C++.
 
-\subsection{Optimization}
+With a naive implementation the computation of the steering forces is $\mathcal{O}(n^2)$. For each boid, the positions of all other boids are required. This is clearly not feasible for simulations with many boids and many generations of evolution.
+
+To reduce the computational load, each boid locally keeps track of it's nearest neighbors and only use these to compute steering. This is updated with some frequency.
 
 \section{Results}
 \label{sec:results}
@@ -127,6 +187,8 @@ Predators:
 More realistic physics simulation -> interesting applications. E.g. drone swarms. Applications in e.g. defense systems.
 
 Also optimize predator behaviour (this could in turn further optimize prey behaviour. Turns into a min-max problem.)
+
+Add obstacles and potentially add some goal area to get to.
 
 
 % In the unusual situation where you want a paper to appear in the
