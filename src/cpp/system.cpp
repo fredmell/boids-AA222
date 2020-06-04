@@ -30,7 +30,11 @@ System::System(bool render, double width, double height)
     }
 }
 
-void System::run(unsigned int numIter, Flock& flock){
+System::~System(){
+    window.close();
+}
+
+void System::run(unsigned int numIter, Flock& flock, bool verbose){
     Progress progress(numIter);
     if(do_render){
         sf_boids = sf::VertexArray(sf::Triangles, 3*flock.boids.size());
@@ -40,6 +44,7 @@ void System::run(unsigned int numIter, Flock& flock){
     }
 
     auto start = std::chrono::high_resolution_clock::now();
+    if(verbose) std::cout << "Running simulation..." << std::endl;
 
     for(unsigned int t=0; t<numIter; t++){
         if(do_render)
@@ -56,9 +61,12 @@ void System::run(unsigned int numIter, Flock& flock){
         progress.step();
     }
 
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop-start);
-    std::cout << "\nElapsed time: " << beautifyDuration(duration) << std::endl;
+    if(verbose){
+        std::cout << "Completed simulation." << std::endl;
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop-start);
+        std::cout << "\nElapsed time: " << beautifyDuration(duration) << std::endl;
+    }
 
     if(do_render)
         window.close();

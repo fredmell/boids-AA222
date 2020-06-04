@@ -9,7 +9,8 @@
 class System{
 public:
     System(bool render, double width, double height);
-    void run(unsigned int numIter, Flock &flock);
+    ~System();
+    void run(unsigned int numIter, Flock &flock, bool verbose = true);
     void takeInput();
     void update(Flock &flock, unsigned t);
     void draw(Flock&);

@@ -5,7 +5,7 @@
 
 #include "SFML/Graphics.hpp"
 
-Prey::Prey(Vec2 x0, Vec2 v0, double max_speed, double _separation_coeff, double _alignment_coeff, double _cohesion_coeff, double max_force)
+Prey::Prey(Vec2 x0, Vec2 v0, double _separation_coeff, double _alignment_coeff, double _cohesion_coeff, double max_speed, double max_force)
 : Boid(x0, v0, max_speed, max_force), separation_coeff(_separation_coeff), alignment_coeff(_alignment_coeff), cohesion_coeff(_cohesion_coeff){
     color = sf::Color::Green;
 }
