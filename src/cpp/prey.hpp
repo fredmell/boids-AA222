@@ -29,7 +29,6 @@ public:
     const double alignment_coeff;
     const double cohesion_coeff;
     const double view_distance = 40000;
-    const double k = 0.0000001; // Spring constant
 
     Vec2 force_separation;
     Vec2 force_alignment;

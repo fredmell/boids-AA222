@@ -1,5 +1,3 @@
-%%%%%%%% ICML 2020 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
-
 \documentclass{article}
 
 % Recommended, but optional, packages for figures and better typesetting:
@@ -7,6 +5,7 @@
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{booktabs} % for professional tables
+
 \usepackage{mathtools}
 \usepackage{physics}
 
@@ -82,22 +81,28 @@ A genetic evolution-based approach is used to determine the coefficients of a bo
 
 \section{Introduction}
 \label{sec:introduction}
-What are boids?
+Boids, developed by Craig Reynolds in 1986 \cite{reynolds:1987:CG}, is an artificial life program that simulates flocking, herding and schooling behavour typically seen in animals in nature. The behavior of boids is governed by a set of simple rules, based on the proximity and heading of other nearby individuals.
 
-Applications of boids framework:
-- Helped understand animal flocking (e.g. how do birds determine where to fly when)
-- CGI (movies, games)
-- Collective motion of drone/vehicle swarms. Very feasible, because each agent measures and reacts to surroundings on its own, without the need of a central controller that controls all boids. In simulations, this allows parallelization.
+Versions of the boids framework have been used in various applications, e.g. to generate realistic-looking flocks of flying animals and schooling fish. Examples are birds in the 1998 video game \textit{Half-Life}, and bat swarms in the 1992 feature film \textit{Batman Returns}. Versions of the boids framework have also been used in swarm robotics, for which flocking behaviour is often desired \cite{swarm}. In biology, the boids model has been important in understanding how schools of fish form and behave because of their close similarities \cite{reynolds:1987:CG}.
+
+Short explanation of the boids system - 2D grid, random init.
+
+Finding a good set of parameter values for boids is therefore of interest.
+This project adds predators that attack prey boids, with the notion of group defense - sufficiently large groups of prey boids are able to fend off attacking predators. A genetic algorithm is used to discover coeffient values that tend to survive the boid simulations.
 
 \section{Background}
 \label{sec:background}
-Reynolds \cite{reynolds:1987:CG}.
+Boid implementations commonly use a heuristic technique to determine the coefficients, through visualizations of the boid system. The coefficients were chosen for different behaviors, such as matching behaviour seen in nature for movies \cite{reynolds:1987:CG}.
 
-Optimization of boids \cite{ntnu}.
+Optimization approaches have also been used. Different approaches include maximizing the total aligntment or minimizing the avarage distance between boids. Particle swarm and genetic optimization techniques have been applied to optimize for this behavior \cite{ntnu}.
+
+This project:
+Objective -> Maximize number of survivors. Randomness in init -> randomness in objective. Overarching goal: optimize flocking. So different approach.
 
 \section{Approach}
 \label{sec:approach}
 \subsection{Boids system}
+\subsubsection{Steering forces}
 \begin{figure*}
   \centering
   \includegraphics[width=.25\linewidth]{images/separation.png}
@@ -138,6 +143,8 @@ The boid masses are normalized, so the force is the acceleration. We also have a
 \end{align*}
 Note that the velocity is normalized. This paper assumes that all boids fly at their max speed $v_\text{max}$ at all times.
 
+Predators follow three forces; they hunt the nearest prey boid, flee from prey boids if too many prey boids are present (simulating how prey animals often are able to fend of predators when grouped together) and separation. These added forces are depicted in Figure~\ref{fig:predatorforces}.
+
 \begin{figure*}
   \centering
   \includegraphics[width=.25\linewidth]{images/chase.png}
@@ -146,26 +153,51 @@ Note that the velocity is normalized. This paper assumes that all boids fly at t
   \label{fig:predatorforces}
 \end{figure*}
 
+\subsubsection{Initialization}
+In each simulation, the boids $b_i$ have randomly initialized positions and velocities. Let $w$ and $h$ denote the system width and height respectively. The positions are sampled uniformly, i.e.
+\begin{align*}
+  x_i \sim \begin{bmatrix} u(0.2w, 0.5w) \\ u(0.2h, 0.8h) \end{bmatrix}
+\end{align*}
+where $u(a,b)$ denotes a uniform random variable on $[a,b]$. This way prey boids spawn on the left half of the environment. Predators similarly spawn on the other half. This attempts to ensure that prey boids are not killed immediately before they have the chance to flock.
+
+The velocities are set to
+\begin{align*}
+  v_i \sim \begin{bmatrix} 1 \\ u(0,1) \end{bmatrix}
+\end{align*}
+i.e. towards the center with some random $y$-component.
+
 \subsection{Genetic algorithm}
+The goal of this project is to determine the set of coefficients of an entire flock of prey boids that maximizes their survival in the presence of predators. The design is the set of coefficients of all boids $\{c_i\}_{i=1}^{n}$. A genetic algorithm is employed to optimize these coefficients for flocking, which leads to survival.
+
 Genetic algorithm approaches commonly have three components; selection, crossover and mutation \cite{kochenderfer}. The fashion in which these are performed commonly differs based on the particular application and the way the chromosomes are encoded.
 
+\subsubsection{Selection}
+In each simulation, a subset of the prey boids survive through the simulation. In this project, the selection step simply selects the survivors of each generation. This is motivated from the principle of natural selection.
 
+\subsubsection{Crossover}
+Crossover is performed as follows: For each new boid, for each coefficient,
+the new boid gets one of the parents values with uniform probability. This way, traits that predict survival are propagated from one generation to the next.
+
+\subsubsection{Mutation}
+To introduce the possibility of new variations, mutations are sporadically added in the form of gaussian noise. With probability $0.1$, we add $\mathcal{N}(0, \sigma^2)$ noise to a particular coefficient of a new boid. The variance is tuned such that a shift in coefficient values is seen over many generations.
 
 \begin{table*}
   \centering
-  \caption{Parameters used for the genetic algorithm and boids simulation}
+  \caption{Parameters used for the genetic algorithm and boids simulation. Most of these were tuned heuristically as the system was developed.}
   \label{tbl:params}
-\begin{tabular}{*3l} \toprule
-\emph{Name}       & \emph{Symbol} & \emph{Value} \\ \midrule
-           &        &       \\
-Separation range           &        &       \\
-Prey force ranges         &        &       \\
-Kill range          &        &       \\
-Hunting coefficient & $c_h$ &       \\
-Flee coefficient &  $c_f$ &       \\
-Predator $v_\text{max}$ &       & 1.1      \\
-Prey $v_\text{max}$ &        & 1.0      \\
-           &        & \\\bottomrule
+\begin{tabular}{*4l} \toprule
+\emph{Name}       & \emph{Symbol} & \emph{Value} & \emph{Description} \\ \midrule
+Mutation probability& & 0.1 & Probability of mutation for a particular coefficient \\
+Mutation spread        &  $\sigma$      & 0.1  & Standard deviation of the mutation   \\
+Separation range           &        &  &     \\
+Prey force ranges         &        &  2000 &\\
+Kill range          &        & 4.0     & \\
+Hunting coefficient & $c_h$ &       &\\
+Flee distance & & 80     \\
+Predator $v_\text{max}$ &       & 1.1     & \\
+Prey $v_\text{max}$ &        & 1.0     & \\
+Predator max force & $F_\text{max, predator}$ & 0.1& \\
+Prey max force & $F_\text{max, prey}$ & 0.04 &\\\bottomrule
 \end{tabular}
 \end{table*}
 
@@ -174,16 +206,34 @@ For performance reasons, the implementation of the boids framework and genetric 
 
 With a naive implementation the computation of the steering forces is $\mathcal{O}(n^2)$. For each boid, the positions of all other boids are required. This is clearly not feasible for simulations with many boids and many generations of evolution.
 
-To reduce the computational load, each boid locally keeps track of it's nearest neighbors and only use these to compute steering. This is updated with some frequency.
+To reduce the computational load, each boid locally keeps track of it's nearest neighbors and only use these to compute steering. This allows constant time lookup of neighbors, which greatly simplifies the complexity, at the cost of the small error introduced by the approximation. The list of neighbors is updated with a particular frequency, for this project every 10 time steps.
 
 \section{Results}
 \label{sec:results}
+Figures~\ref{fig:survival} and~\ref{fig:coeffs} show the number of survivors and coefficient statistics over the course of 300 generations of evolution.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/survival.eps}
+  \caption{Proportion of boids that survive each generation. The orange line shows the mean of the last 10 numbers of survivors. It is clear that there is high randomness in the simulations, likely due to the inherent randomness of each simulation. A lot of boids do not have time to move towards other flockmates before a predator reaches them.}
+  \label{fig:survival}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{figures/coeffs.pdf}
+  \caption{Mean coefficient value across all boids of each particular generation. The shaded regions show the standard deviations of the coefficients.}
+  \label{fig:coeffs}
+\end{figure}
 
 \section{Conclusion}
 \label{sec:conclusion}
+Discuss how results are unreliable because of large degree of randomness.
 
 \section{Future directions}
 \label{sec:future}
+Better objective function/algorithm.
+
 More realistic physics simulation -> interesting applications. E.g. drone swarms. Applications in e.g. defense systems.
 
 Also optimize predator behaviour (this could in turn further optimize prey behaviour. Turns into a min-max problem.)

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <random>
 #include <algorithm>
 #include <cassert>
@@ -12,7 +13,7 @@
 #include "SFML/Window.hpp"
 
 struct Options{
-    int num_generations = 500;
+    int num_generations = 100;
     int number_of_preys = 200;
     int number_of_predators = 10;
     bool abort = false;
@@ -27,6 +28,13 @@ struct Params{
     double separation = 1.0;
     double alignment = 1.5;
     double cohesion = 1.0;
+
+    double normalize(){
+        double sum = separation + alignment + cohesion;
+        separation /= sum;
+        alignment /= sum;
+        cohesion /= sum;
+    }
 };
 
 void parseOptions(Options&, int argc, char const **argv);
@@ -46,12 +54,13 @@ int main(int argc, char const *argv[]) {
     } else {
       gen = std::mt19937(1);
     }
-    std::uniform_real_distribution<double> dist_height(0.2*system.window_height, 0.8*system.window_height);
-    std::uniform_real_distribution<double> dist_width(0.2*system.window_width, 0.8*system.window_width);
+    std::uniform_real_distribution<double> dist_height(0.1*system.window_height, 0.4*system.window_height);
+    std::uniform_real_distribution<double> dist_width(0.1*system.window_width, 0.4*system.window_width);
+    std::uniform_real_distribution<double> uniform(0.0,0.5);
 
-    std::uniform_real_distribution<double> dist_separation(0.0, 4.0);
-    std::uniform_real_distribution<double> dist_alignment(0.0, 2.0);
-    std::uniform_real_distribution<double> dist_cohesion(0.0, 2.0);
+    std::uniform_real_distribution<double> dist_separation(0.0, 3.0);
+    std::uniform_real_distribution<double> dist_alignment(0.0, 0.5);
+    std::uniform_real_distribution<double> dist_cohesion(0.0, 0.5);
 
     // Initialize the boid parameters
     std::vector<Params> design;
@@ -60,8 +69,15 @@ int main(int argc, char const *argv[]) {
         params.separation = dist_separation(gen);
         params.alignment = dist_alignment(gen);
         params.cohesion = dist_cohesion(gen);
+        params.normalize();
         design.push_back(params);
     }
+
+    std::ofstream outfile("../data/results.csv");
+    outfile << "Generation," << "Survivors," << "Avg. survivors,"
+            << "Avg. Sep," << "Sd. Sep,"
+            << "Avg. Align," << "Sd. Align,"
+            << "Avg. Coh," << "Sd. Coh" << std::endl;
 
     // Run all generations of evolution
     std::vector<double> survivor_counts;
@@ -72,7 +88,7 @@ int main(int argc, char const *argv[]) {
         Flock flock(system.window_width, system.window_height);
         for (size_t i = 0; i < options.number_of_preys; i++) {
             Vec2 pos(dist_width(gen), dist_height(gen));
-            Vec2 vel(rand()%3 - 1,  rand()%3 - 1);
+            Vec2 vel(1, uniform(gen));
             Prey* prey = new Prey(
                 pos,
                 vel,
@@ -84,7 +100,7 @@ int main(int argc, char const *argv[]) {
         }
 
         for(size_t i = 0; i < options.number_of_predators; i++){
-            Vec2 pos(dist_width(gen), dist_height(gen));
+            Vec2 pos(dist_width(gen) + system.window_width, dist_height(gen));
             Vec2 vel(rand()%3 - 1,  rand()%3 - 1);
             flock.addPredator(new Predator(pos, vel));
         }
@@ -105,38 +121,44 @@ int main(int argc, char const *argv[]) {
                   << "Survivors: "      << num_survivors << " - "
                   << "Avg. survivors: " << avg_survivors << std::endl;
 
-        if(generation % 10 == 0){
-            // Print statistics
-            double avg_sep = 0.0, avg_align = 0.0, avg_cohesion = 0.0;
-            double sd_sep  = 0.0, sd_align = 0.0, sd_cohesion = 0.0;
-            for(Params params : design){
-                avg_sep += params.separation;
-                avg_align += params.alignment;
-                avg_cohesion += params.cohesion;
-            }
+        outfile << generation << "," << num_survivors << "," << avg_survivors << ",";
 
-            avg_sep /= (double)design.size();
-            avg_align /= (double)design.size();
-            avg_cohesion /= (double)design.size();
+        // Print statistics
+        double avg_sep = 0.0, avg_align = 0.0, avg_cohesion = 0.0;
+        double sd_sep  = 0.0, sd_align = 0.0, sd_cohesion = 0.0;
+        for(Params params : design){
+            avg_sep += params.separation;
+            avg_align += params.alignment;
+            avg_cohesion += params.cohesion;
+        }
 
-            for(Params params : design){
-                sd_sep += (params.separation - avg_sep)*(params.separation - avg_sep);
-                sd_align += (params.alignment - avg_align)*(params.alignment - avg_align);
-                sd_cohesion += (params.cohesion - avg_cohesion)*(params.cohesion - avg_cohesion);
-            }
+        avg_sep /= (double)design.size();
+        avg_align /= (double)design.size();
+        avg_cohesion /= (double)design.size();
 
-            sd_sep /= (double)design.size() - 1;
-            sd_align /= (double)design.size() - 1;
-            sd_cohesion /= (double)design.size() - 1;
+        for(Params params : design){
+            sd_sep += (params.separation - avg_sep)*(params.separation - avg_sep);
+            sd_align += (params.alignment - avg_align)*(params.alignment - avg_align);
+            sd_cohesion += (params.cohesion - avg_cohesion)*(params.cohesion - avg_cohesion);
+        }
 
-            sd_sep = std::sqrt(sd_sep);
-            sd_align = std::sqrt(sd_align);
-            sd_cohesion = std::sqrt(sd_cohesion);
+        sd_sep /= (double)design.size() - 1;
+        sd_align /= (double)design.size() - 1;
+        sd_cohesion /= (double)design.size() - 1;
 
+        sd_sep = std::sqrt(sd_sep);
+        sd_align = std::sqrt(sd_align);
+        sd_cohesion = std::sqrt(sd_cohesion);
+
+        if(generation % 5 == 0){
             std::cout << "Separation - Avg: " << avg_sep << " - Sd: " << sd_sep << std::endl;
             std::cout << "Alignment - Avg: " << avg_align << " - Sd: " << sd_align << std::endl;
             std::cout << "Cohesion - Avg: " << avg_cohesion << " - Sd: " << sd_cohesion << std::endl;
         }
+
+        outfile << avg_sep << "," << sd_sep << ",";
+        outfile << avg_align << "," << sd_align << ",";
+        outfile << avg_cohesion << "," << sd_cohesion << std::endl;
 
         // Retrieve params of survivors.
         std::vector<Params> survivors;
@@ -154,7 +176,7 @@ int main(int argc, char const *argv[]) {
         std::uniform_int_distribution<int> idx(0,survivors.size()-1);
         std::normal_distribution<double> normal(0, 0.1);
         while(design.size() != options.number_of_preys){
-            // Sample two parents
+            // Sample two parents (could get parent1 == parent2, but this is not a big problem)
             Params parent1 = survivors.at(idx(gen));
             Params parent2 = survivors.at(idx(gen));
 
@@ -169,6 +191,13 @@ int main(int argc, char const *argv[]) {
             if(rand()%10 == 0) child.alignment += normal(gen);
             if(rand()%10 == 0) child.cohesion += normal(gen);
 
+            // Avoid negative coefficients
+            child.separation = std::max(0.2, child.separation);
+            child.alignment = std::max(0.0, child.alignment);
+            child.cohesion = std::max(0.0, child.cohesion);
+
+            child.normalize();
+
             design.push_back(child);
         }
 
@@ -176,6 +205,8 @@ int main(int argc, char const *argv[]) {
 
         assert(design.size() == options.number_of_preys);
     }
+
+    outfile.close();
 
     return 0;
 }
